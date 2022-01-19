@@ -1,0 +1,112 @@
+{
+    "User": {
+        "type": "ObjectTypeDefinition",
+        "fields": [
+            {
+                "name": "id",
+                "arguments": [],
+                "isDeprecated": false,
+                "directives": [],
+                "noNull": true,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "ID"
+            },
+            {
+                "name": "username",
+                "arguments": [],
+                "isDeprecated": false,
+                "directives": [
+                    {
+                        "name": "length",
+                        "args": [
+                            {
+                                "name": "min",
+                                "value": "4"
+                            },
+                            {
+                                "name": "max",
+                                "value": "35"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "format",
+                        "args": [
+                            {
+                                "name": "formatType",
+                                "value": "UTF-8"
+                            }
+                        ]
+                    }
+                ],
+                "noNull": true,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "String"
+            },
+            {
+                "name": "email",
+                "arguments": [],
+                "isDeprecated": false,
+                "directives": [],
+                "noNull": true,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "String"
+            }
+        ],
+        "values": [],
+        "types": [],
+        "implementedTypes": [],
+        "directives": [
+            {
+                "name": "auth",
+                "args": [
+                    {
+                        "name": "requires",
+                        "value": "USER"
+                    }
+                ]
+            }
+        ]
+    },
+    "Post": {
+        "type": "ObjectTypeDefinition",
+        "fields": [
+            {
+                "name": "id",
+                "arguments": [],
+                "isDeprecated": false,
+                "directives": [],
+                "noNull": true,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "ID"
+            }
+        ],
+        "values": [],
+        "types": [],
+        "implementedTypes": [],
+        "directives": []
+    },
+    "Blog": {
+        "type": "ObjectTypeDefinition",
+        "fields": [
+            {
+                "name": "id",
+                "arguments": [],
+                "isDeprecated": false,
+                "directives": [],
+                "noNull": true,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "ID"
+            }
+        ],
+        "values": [],
+        "types": [],
+        "implementedTypes": [],
+        "directives": []
+    }
+}

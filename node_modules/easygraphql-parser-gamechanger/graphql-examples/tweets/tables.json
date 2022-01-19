@@ -1,0 +1,160 @@
+[
+    {
+        "name": "Tweet",
+        "columns": [
+            {
+                "field": "Pk_Tweet_id",
+                "fieldType": "Int",
+                "noNull": false,
+                "unique": false,
+                "constraint": "PRIMARY KEY NOT NULL"
+            },
+            {
+                "field": "body",
+                "fieldType": "text",
+                "noNull": false,
+                "unique": false,
+                "constraint": null
+            },
+            {
+                "field": "date",
+                "fieldType": "timestamp",
+                "noNull": true,
+                "unique": false,
+                "constraint": null
+            },
+            {
+                "field": "Fk_User_id",
+                "fieldType": "Int",
+                "noNull": false,
+                "unique": false,
+                "constraint": "FOREIGN KEY (\"Fk_User_id\") REFERENCES \"User\" (\"Pk_User_id\")"
+            }, {
+                "field": "Fk_Stat_id",
+                "fieldType": "Int",
+                "noNull": false,
+                "unique": false,
+                "constraint": "FOREIGN KEY (\"Fk_Stat_id\") REFERENCES \"Stat\" (\"Pk_Stat_id\")"
+            }
+        ]
+    },
+    {
+        "name": "User",
+        "columns": [
+            {
+                "field": "Pk_User_id",
+                "fieldType": "Int",
+                "noNull": false,
+                "unique": false,
+                "constraint": "PRIMARY KEY NOT NULL"
+            },
+            {
+                "field": "username",
+                "fieldType": "text",
+                "noNull": false,
+                "unique": false,
+                "constraint": null
+            },
+            {
+                "field": "firstname",
+                "fieldType": "text",
+                "noNull": false,
+                "unique": false,
+                "constraint": null
+            },
+            {
+                "field": "lastname",
+                "fieldType": "text",
+                "noNull": false,
+                "unique": false,
+                "constraint": null
+            }, {
+                "field": "fullname",
+                "fieldType": "text",
+                "noNull": false,
+                "unique": false,
+                "constraint": null
+            }, {
+                "field": "name",
+                "fieldType": "text",
+                "noNull": false,
+                "unique": false,
+                "constraint": null
+            }
+        ]
+    },
+    {
+        "name": "Stat",
+        "columns": [
+            {
+                "field": "Pk_Stat_id",
+                "fieldType": "Int",
+                "noNull": false,
+                "unique": false,
+                "constraint": "PRIMARY KEY NOT NULL"
+            },
+            {
+                "field": "views",
+                "fieldType": "Int",
+                "noNull": false,
+                "unique": false,
+                "constraint": null
+            },
+            {
+                "field": "likes",
+                "fieldType": "Int",
+                "noNull": false,
+                "unique": false,
+                "constraint": null
+            },
+            {
+                "field": "retweets",
+                "fieldType": "Int",
+                "noNull": false,
+                "unique": false,
+                "constraint": null
+            }, {
+                "field": "responses",
+                "fieldType": "Int",
+                "noNull": false,
+                "unique": false,
+                "constraint": null
+            }
+        ]
+    },
+    {
+        "name": "Notification",
+        "columns": [
+            {
+                "field": "Pk_Notification_id",
+                "fieldType": "Int",
+                "noNull": false,
+                "unique": false,
+                "constraint": "PRIMARY KEY NOT NULL"
+            }, {
+                "field": "type",
+                "fieldType": "text",
+                "noNull": false,
+                "unique": false,
+                "constraint": null
+            }
+        ]
+    }, {
+        "name": "Meta",
+        "columns": [
+            {
+                "field": "Pk_Meta_id",
+                "fieldType": "Int",
+                "noNull": false,
+                "unique": false,
+                "constraint": "PRIMARY KEY NOT NULL"
+            }, {
+                "field": "count",
+                "fieldType": "Int",
+                "noNull": false,
+                "unique": false,
+                "constraint": null
+            }
+        ]
+    }
+]

@@ -1,0 +1,17 @@
+{
+    "oneToOne": [],
+    "manyToMany": [],
+    "oneToMany": [],
+    "manyToOne": [],
+    "oneOnly": [
+        [
+            "User", "Tweet"
+        ],
+        [
+            "Stat", "Tweet"
+        ]
+    ],
+    "manyOnly": [],
+    "selfJoinOne": [],
+    "selfJoinMany": []
+}

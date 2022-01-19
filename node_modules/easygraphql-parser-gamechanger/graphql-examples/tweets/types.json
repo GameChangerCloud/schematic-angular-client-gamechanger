@@ -1,0 +1,362 @@
+[
+    {
+        "type": "ObjectTypeDefinition",
+        "fields": [
+            {
+                "name": "id",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": true,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "ID"
+            },
+            {
+                "name": "body",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "String"
+            },
+            {
+                "name": "date",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": true,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "DateTime"
+            },
+            {
+                "name": "author",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "User"
+            }, {
+                "name": "stats",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "Stat"
+            }
+        ],
+        "values": [],
+        "types": [],
+        "implementedTypes": []
+    },
+    {
+        "type": "ScalarTypeDefinition",
+        "fields": [],
+        "values": [],
+        "types": [],
+        "implementedTypes": []
+    },
+    {
+        "type": "ObjectTypeDefinition",
+        "fields": [
+            {
+                "name": "id",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": true,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "ID"
+            },
+            {
+                "name": "username",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "String"
+            },
+            {
+                "name": "firstname",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "String"
+            },
+            {
+                "name": "lastname",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "String"
+            }, {
+                "name": "fullname",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "String"
+            }, {
+                "name": "name",
+                "arguments": [],
+                "isDeprecated": true,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "String"
+            }
+        ],
+        "values": [],
+        "types": [],
+        "implementedTypes": []
+    },
+    {
+        "type": "ObjectTypeDefinition",
+        "fields": [
+            {
+                "name": "id",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": true,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "ID"
+            },
+            {
+                "name": "views",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "Int"
+            },
+            {
+                "name": "likes",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "Int"
+            },
+            {
+                "name": "retweets",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "Int"
+            }, {
+                "name": "responses",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "Int"
+            }
+        ],
+        "values": [],
+        "types": [],
+        "implementedTypes": []
+    }, {
+        "type": "ObjectTypeDefinition",
+        "fields": [
+            {
+                "name": "id",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": true,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "ID"
+            }, {
+                "name": "type",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "String"
+            }
+        ],
+        "values": [],
+        "types": [],
+        "implementedTypes": []
+    }, {
+        "type": "ObjectTypeDefinition",
+        "fields": [
+            {
+                "name": "id",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": true,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "ID"
+            }, {
+                "name": "count",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "Int"
+            }
+        ],
+        "values": [],
+        "types": [],
+        "implementedTypes": []
+    }, {
+        "type": "ObjectTypeDefinition",
+        "fields": [
+            {
+                "name": "Tweet",
+                "arguments": [
+                    {
+                        "name": "id",
+                        "isDeprecated": false,
+                        "noNull": true,
+                        "isArray": false,
+                        "noNullArrayValues": false,
+                        "type": "ID"
+                    }
+                ],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "Tweet"
+            },
+            {
+                "name": "Tweets",
+                "arguments": [
+                    {
+                        "name": "limit",
+                        "isDeprecated": false,
+                        "noNull": false,
+                        "isArray": false,
+                        "noNullArrayValues": false,
+                        "type": "Int"
+                    }, {
+                        "name": "skip",
+                        "isDeprecated": false,
+                        "noNull": false,
+                        "isArray": false,
+                        "noNullArrayValues": false,
+                        "type": "Int"
+                    }, {
+                        "name": "sort_field",
+                        "isDeprecated": false,
+                        "noNull": false,
+                        "isArray": false,
+                        "noNullArrayValues": false,
+                        "type": "String"
+                    }, {
+                        "name": "sort_order",
+                        "isDeprecated": false,
+                        "noNull": false,
+                        "isArray": false,
+                        "noNullArrayValues": false,
+                        "type": "String"
+                    }
+                ],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": true,
+                "noNullArrayValues": false,
+                "type": "Tweet"
+            },
+            {
+                "name": "TweetsMeta",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "Meta"
+            },
+            {
+                "name": "User",
+                "arguments": [
+                    {
+                        "name": "id",
+                        "isDeprecated": false,
+                        "noNull": true,
+                        "isArray": false,
+                        "noNullArrayValues": false,
+                        "type": "ID"
+                    }
+                ],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "User"
+            }, {
+                "name": "Notifications",
+                "arguments": [
+                    {
+                        "name": "limit",
+                        "isDeprecated": false,
+                        "noNull": false,
+                        "isArray": false,
+                        "noNullArrayValues": false,
+                        "type": "Int"
+                    }
+                ],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": true,
+                "noNullArrayValues": false,
+                "type": "Notification"
+            }, {
+                "name": "NotificationsMeta",
+                "arguments": [],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "Meta"
+            }
+        ],
+        "values": [],
+        "types": [],
+        "implementedTypes": []
+    }, {
+        "type": "ObjectTypeDefinition",
+        "fields": [
+            {
+                "name": "Tweet",
+                "arguments": [
+                    {
+                        "name": "id",
+                        "isDeprecated": false,
+                        "noNull": true,
+                        "isArray": false,
+                        "noNullArrayValues": false,
+                        "type": "ID"
+                    }
+                ],
+                "isDeprecated": false,
+                "noNull": false,
+                "isArray": false,
+                "noNullArrayValues": false,
+                "type": "Tweet"
+            }
+        ],
+        "values": [],
+        "types": [],
+        "implementedTypes": []
+    }
+]

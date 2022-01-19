@@ -1,0 +1,29 @@
+{
+  "name": "generator-angular-client-gamechanger",
+  "version": "1.0.0",
+  "description": "Generator based on [Yeoman](https://yeoman.io/) that scaffolds the basic [Ngrx](https://ngrx.io/) logic in a [Angular](https://angular.io/) project based on a graphQL schema.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GameChangerCloud/generator-angular-client-gamechanger.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "bugs": {
+    "url": "https://github.com/GameChangerCloud/generator-angular-client-gamechanger/issues"
+  },
+  "homepage": "https://github.com/GameChangerCloud/generator-angular-client-gamechanger#readme",
+  "dependencies": {
+    "easygraphql-parser": "0.0.15",
+    "easygraphql-parser-gamechanger": "0.0.17",
+    "inflection": "^1.13.1",
+    "pluralize": "^8.0.0",
+    "yeoman-generator": "^5.4.2"
+  }
+}

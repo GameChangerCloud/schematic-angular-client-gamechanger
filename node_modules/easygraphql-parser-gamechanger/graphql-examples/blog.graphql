@@ -1,0 +1,13 @@
+type User @auth(requires: USER){
+    id: ID!
+    username: String! @length(min : 4, max : 35) @format(formatType : "UTF-8")
+    email: String! 
+}
+
+type Post {
+    id: ID!
+}
+
+type Blog {
+    id: ID!
+}
