@@ -1,32 +1,36 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": "src",
     "outDir": "./dist/out-tsc",
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "emitDecoratorMetadata": true,    
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "importHelpers": true,
-    "target": "es2017",
+    "target": "es6",
+    "esModuleInterop": true,
     "module": "es2020",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
     "lib": [
-      "es2020",
+      "ES2019",
       "dom"
-    ]
+    ],
+    "paths": {
+      "tslib" : ["path/to/node_modules/tslib/tslib.d.ts"],
+      "@app/*": ["app/*"],
+      "@data/*": ["app/data/*"],
+      "@shared/*": ["app/shared/*"],
+      "@screen/*": ["app/screen/*"],
+      "@assets/*": ["assets/*"],
+      "@core/*": ["app/core/*"],
+      "@store/*": ["app/store/*"],
+    },
   },
-  "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
-    "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true
-  }
+  "exclude": ["app/**/*.ngtypecheck.ts"]
 }

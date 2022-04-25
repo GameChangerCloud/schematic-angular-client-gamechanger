@@ -1,0 +1,92 @@
+/******* MIXINS *******/
+
+/**
+* Dimensionnement d'element
+* @param : Number - $width
+* @param : Number - $height 
+**/
+@mixin size($width: $width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+/**
+* Font poppins configuration for element
+* @param : size - font-size
+* @param : colour - font-color
+* @param : weight - weight : 
+* @param : lh - line-height 
+* @param : ls - letter-spacing 
+**/
+@mixin poppins-set-config(
+  $size: false,
+  $colour: false,
+  $weight: false,
+  $lh: false,
+  $ls: false
+) {
+  @if $size {
+    font-size: $size;
+  }
+  @if $colour {
+    color: $colour;
+  }
+  @if $weight {
+    font-weight: $weight;
+  }
+  @if $lh {
+    line-height: $lh;
+  }
+  @if $ls {
+    letter-spacing: $ls;
+  }
+}
+
+/**
+* Font poppins configuration for element
+* @param : size - font-size
+* @param : colour - font-color
+* @param : weight - weight : 
+* @param : lh - line-height 
+* @param : ls - letter-spacing 
+**/
+@mixin action-button-font-config() {
+  font-family: var(--mainFontFamily);
+  font-size: var(--actionButtonFontSize);
+  color: white;
+  font-weight: 600;
+  line-height: 113.3%;
+  letter-spacing: 0.75px;
+  text-align: center;
+  background:var(--actionColor);
+  box-shadow: 
+    0px 1px 3px rgba(0, 0, 0, 0.2),
+    0px 3px 14px rgba(0, 0, 0, 0.12);
+  border-radius: 3px;
+}
+
+/**
+* Set display flex with different config
+* @param : align-items
+* @param : justify-content
+* @param : flex-direction
+*/
+@mixin display-flex(
+  $align-items: false,
+  $justify-content: false,
+  $flex-direction: false
+) {
+  display: flex;
+  @if $align-items {
+    align-items: $align-items;
+  }
+  @if $justify-content {
+    justify-content: $justify-content;
+  }
+  @if $flex-direction {
+    flex-direction: $flex-direction;
+  }
+}
+
+
+

@@ -1,0 +1,9 @@
+<mat-form-field appearance="outline" [style.width.vw]='width'class="search-bar" *ngIf='searchData'>
+  <input type="text" placeholder="{{'search-bar.placeholder'|translate }}" aria-label="Number" matInput [formControl]="searchBarForm"
+    [matAutocomplete]="auto">
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+      {{option}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

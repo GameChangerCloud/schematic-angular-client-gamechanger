@@ -1,0 +1,153 @@
+<!-- SIDENAV CONTAINER -->
+<mat-sidenav-container [hasBackdrop]="false"  autosize>
+  <!-- SIDENAV -->
+  <mat-sidenav [fixedInViewport]="true" #sidenav class='side-nav' mode="side" opened="isExpended" fxHide.lt-sm="true"
+    *ngIf="user">
+    <!-- SIDENAV HEADER -->
+    <header class="side-nav__header">
+      <!-- LOGO HEADER EXPENDED SIDENAV-->
+      <mat-icon *ngIf="isExpanded" class="side-nav__header__logo" mat-list-icon svgIcon="factonics-logo-text"
+        aria-hidden="false" aria-label="nav link icon"></mat-icon>
+      <!-- LOGO HEADER CLOSED SIDENAV-->
+      <mat-icon *ngIf="!isExpanded" class="side-nav__header__logo--side-nav-closed" mat-list-icon
+        svgIcon="factonics-logo-round" aria-hidden="false" aria-label="nav link icon"></mat-icon>
+    </header>
+    <!-- SIDENAV MAIN NAV -->
+    <nav class='side-nav__nav'>
+      <!-- NAV ITEM : Fake animation trigger -->
+      <a class='side-nav__nav__item'>
+        <div [@slideInOut]="sideNavState" [style.width.vw]='!isExpanded ? "1.7" : "10"'
+          class='side-nav__nav__item__inner-wrapper'>
+        </div>
+      </a>
+      <!-- NAV ITEM : New project (click)="dialogService.openDialog('project-stepper','90vw','90vh','newProject')" -->
+      <a class='side-nav__nav__item side-nav__nav__item__disabled' matTooltip="Not available on trial mode." (click)="dialogService.openDialog('project-stepper','90vw','90vh','newProject')">
+        <div [style.width.vw]='!isExpanded ? "1.7" : "10"' class='side-nav__nav__item__inner-wrapper'>
+          <svg class='side-nav__nav__item__icon' matTooltip="Nouveau projet" width="30" height="30" viewBox="0 0 30 30"
+            fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M29.5 14.9639C29.5 22.951 23.0093 29.4278 15 29.4278C6.99074 29.4278 0.5 22.951 0.5 14.9639C0.5 6.97685 6.99074 0.5 15 0.5C23.0093 0.5 29.5 6.97685 29.5 14.9639Z"
+              stroke="#3B3A87" />
+            <rect x="14.4502" y="6.6731" width="1.61111" height="16.2379" rx="0.805556" fill="#3B3A87" stroke="#3B3A87"
+              stroke-width="0.5" />
+            <rect x="23.8397" y="14.0182" width="1.54919" height="17.1667" rx="0.774597"
+              transform="rotate(90 23.8397 14.0182)" fill="#3B3A87" stroke="#3B3A87" stroke-width="0.5" />
+          </svg>
+          <span  *ngIf="isExpanded" class='side-nav__nav__item__txt'>{{'main-side-nav.item-1' | translate}}</span>
+        </div>
+      </a>
+      <mat-divider></mat-divider>
+      <!-- NAV ITEM : Project -->
+      <a class='side-nav__nav__item' [routerLink]="['/project']" [routerLinkActive]="['active']">
+        <div [style.width.vw]='!isExpanded ? "1.7" : "10"' class='side-nav__nav__item__inner-wrapper'>
+          <svg matTooltip="Projets" class='side-nav__nav__item__icon' width="31" height="30" viewBox="0 0 31 30"
+            fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M29.4099 13.9518L24.5922 11.543L29.4099 9.13403C30.2717 8.70327 30.2726 7.46913 29.4099 7.03769L15.5817 0.123597C15.2517 -0.0411989 14.8635 -0.0411989 14.5334 0.123597L0.705245 7.03769C-0.156499 7.46868 -0.157414 8.70281 0.705245 9.13403L5.523 11.543L0.705245 13.9518C-0.156499 14.3828 -0.157414 15.6167 0.705245 16.0481L5.523 18.4571L0.705245 20.8659C-0.156499 21.2969 -0.157414 22.5308 0.705245 22.9622L14.5334 29.8763C14.8628 30.0409 15.251 30.0416 15.5817 29.8763L29.4099 22.9622C30.2717 22.5312 30.2726 21.2973 29.4099 20.8659L24.5922 18.4571L29.4099 16.0481C30.2717 15.6174 30.2726 14.3832 29.4099 13.9518ZM15.0576 2.48201L26.2653 8.08597L15.0576 13.6897L3.84987 8.08597L15.0576 2.48201ZM26.2653 21.9142L15.0576 27.5179L3.84987 21.9142L8.14348 19.7672L14.5334 22.9622C14.863 23.1268 15.251 23.1275 15.5817 22.9622L21.9717 19.7672L26.2653 21.9142ZM15.0576 20.6038L3.84987 15.0001L8.14348 12.8531L14.5334 16.0481C14.863 16.2127 15.251 16.2134 15.5817 16.0481L21.9717 12.8531L26.2653 15.0001L15.0576 20.6038Z"
+              fill="#3B3A87" />
+          </svg>
+          <span *ngIf="isExpanded" class='side-nav__nav__item__txt'>{{'main-side-nav.item-2' | translate}}</span>
+        </div>
+      </a>
+      <!-- NAV ITEM  : UseCase -->
+      <a class='side-nav__nav__item' [routerLink]="['/usecase']" [routerLinkActive]="['active']">
+        <div [style.width.vw]='!isExpanded ? "1.7" : "10"' class='side-nav__nav__item__inner-wrapper'>
+          <svg class='side-nav__nav__item__icon' matTooltip="Cas d'usage" xmlns="http://www.w3.org/2000/svg" width="30"
+            height="30" viewBox="0 0 30 30" fill="none">
+            <path
+              d="M14.999 3.5144C14.5136 3.5144 14.1201 3.90792 14.1201 4.39331C14.1201 4.8787 14.5136 5.27221 14.999 5.27221C17.9073 5.27221 20.2733 7.63787 20.2733 10.5456C20.2733 11.031 20.6668 11.4245 21.1522 11.4245C21.6376 11.4245 22.0311 11.031 22.0311 10.5456C22.0311 6.66862 18.8766 3.5144 14.999 3.5144Z"
+              fill="#3B3A87" />
+            <path
+              d="M12.7349 0.23544C8.76398 1.06518 5.54426 4.25408 4.69705 8.24964C3.98168 11.6236 4.86322 15.0109 7.11562 17.543C8.21666 18.7807 8.84806 20.4144 8.84806 22.0299V23.7877C8.84806 24.9573 9.6137 25.9508 10.6699 26.295C11.0173 28.3472 12.7985 29.9986 15.0004 29.9986C17.2017 29.9986 18.9834 28.3477 19.3309 26.295C20.3871 25.9508 21.1527 24.9573 21.1527 23.7877V22.0299C21.1527 20.4112 21.7862 18.7971 22.9364 17.4848C24.6201 15.5641 25.5472 13.0997 25.5472 10.5456C25.5472 3.89139 19.4565 -1.16882 12.7349 0.23544ZM15.0004 28.2409C13.8706 28.2409 12.88 27.4634 12.5142 26.4186H17.4865C17.1208 27.4634 16.1302 28.2409 15.0004 28.2409ZM19.3949 23.7877C19.3949 24.2724 19.0006 24.6666 18.516 24.6666H11.4848C11.0001 24.6666 10.6059 24.2724 10.6059 23.7877V22.9088H19.3949V23.7877ZM21.6146 16.3263C20.3888 17.7247 19.6346 19.411 19.4433 21.151H10.5577C10.3666 19.4101 9.61435 17.7072 8.42912 16.3747C6.55189 14.2644 5.81836 11.4358 6.41666 8.61427C7.11504 5.32049 9.79862 2.64481 13.0945 1.95616C18.7209 0.780361 23.7894 5.00567 23.7894 10.5456C23.7894 12.6732 23.0171 14.7262 21.6146 16.3263Z"
+              fill="#3B3A87" />
+            <path
+              d="M2.63671 10.5457H0.878905C0.393515 10.5457 0 10.9392 0 11.4246C0 11.9099 0.393515 12.3035 0.878905 12.3035H2.63671C3.1221 12.3035 3.51562 11.9099 3.51562 11.4246C3.51562 10.9392 3.1221 10.5457 2.63671 10.5457Z"
+              fill="#3B3A87" />
+            <path
+              d="M3.00114 6.15101L1.75819 4.90807C1.41501 4.56482 0.858485 4.56482 0.515244 4.90807C0.172002 5.25131 0.172002 5.80777 0.515244 6.15101L1.75819 7.39396C2.10137 7.7372 2.6579 7.73726 3.00114 7.39396C3.34438 7.05072 3.34438 6.49425 3.00114 6.15101Z"
+              fill="#3B3A87" />
+            <path
+              d="M3.00114 15.4549C2.6579 15.1117 2.10137 15.1117 1.75819 15.4549L0.515244 16.6979C0.172002 17.0411 0.172002 17.5976 0.515244 17.9408C0.858427 18.2841 1.41495 18.2841 1.75819 17.9408L3.00114 16.6979C3.34438 16.3546 3.34438 15.7982 3.00114 15.4549Z"
+              fill="#3B3A87" />
+            <path
+              d="M29.1211 10.5457H27.3633C26.8779 10.5457 26.4844 10.9392 26.4844 11.4246C26.4844 11.9099 26.8779 12.3035 27.3633 12.3035H29.1211C29.6065 12.3035 30 11.9099 30 11.4246C30 10.9392 29.6065 10.5457 29.1211 10.5457Z"
+              fill="#3B3A87" />
+            <path
+              d="M29.4855 4.90807C29.1423 4.56482 28.5858 4.56482 28.2426 4.90807L26.9996 6.15101C26.6564 6.49425 26.6564 7.05072 26.9996 7.39396C27.3428 7.73714 27.8993 7.7372 28.2426 7.39396L29.4855 6.15101C29.8288 5.80777 29.8288 5.25131 29.4855 4.90807Z"
+              fill="#3B3A87" />
+            <path
+              d="M29.4855 16.6979L28.2426 15.4549C27.8994 15.1117 27.3429 15.1117 26.9996 15.4549C26.6564 15.7982 26.6564 16.3546 26.9996 16.6979L28.2426 17.9408C28.5857 18.284 29.1423 18.2841 29.4855 17.9408C29.8288 17.5976 29.8288 17.0411 29.4855 16.6979Z"
+              fill="#3B3A87" />
+          </svg>
+          <span matLine *ngIf="isExpanded" class='side-nav__nav__item__txt'>{{'main-side-nav.item-3' | translate}}</span>
+        </div>
+      </a>
+      <!-- NAV ITEM  : Notification -->
+      <!-- <a class='side-nav__nav__item'  (click)="openDialog('project-stepper','newProject','90vw','90vh')">
+
+           <div class= 'side-nav__nav__item__inner-wrapper'>
+               <svg class='side-nav__nav__item__icon' matTooltip="Cas d'usage" width="30" class="nav__icon"height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0)">
+                <path d="M26.3789 23.8742C26.2907 23.817 25.627 23.352 24.9625 21.9455C23.742 19.3625 23.4858 15.724 23.4858 13.1265C23.4858 13.1152 23.4856 13.104 23.4852 13.0927C23.4719 9.65977 21.4163 6.70043 18.4746 5.37264V3.34195C18.4746 1.49918 16.9779 0 15.1382 0H14.8617C13.0219 0 11.5252 1.49918 11.5252 3.34195V5.37252C8.57374 6.70459 6.51399 9.67904 6.51399 13.1265C6.51399 15.724 6.25782 19.3625 5.03737 21.9455C4.37286 23.352 3.70917 23.8169 3.62093 23.8742C3.24933 24.0462 3.0661 24.4434 3.15159 24.846C3.2379 25.2526 3.61794 25.5329 4.03296 25.5329H10.4752C10.5111 28.0021 12.5264 30 14.9999 30C17.4735 30 19.4888 28.0021 19.5247 25.5329H25.9669C26.3819 25.5329 26.762 25.2526 26.8483 24.846C26.9337 24.4434 26.7505 24.0461 26.3789 23.8742ZM13.2831 3.34195C13.2831 2.47002 13.9913 1.76068 14.8617 1.76068H15.1382C16.0087 1.76068 16.7169 2.47002 16.7169 3.34195V4.80193C16.1621 4.68727 15.5878 4.62691 14.9997 4.62691C14.4118 4.62691 13.8377 4.68721 13.2832 4.80176V3.34195H13.2831ZM14.9999 28.2393C13.4957 28.2393 12.2687 27.0313 12.233 25.533H17.7669C17.7312 27.0312 16.5042 28.2393 14.9999 28.2393ZM18.539 23.7722C18.5388 23.7722 6.03599 23.7722 6.03599 23.7722C6.18804 23.5352 6.34278 23.2669 6.49659 22.9637C7.67456 20.6409 8.27186 17.3312 8.27186 13.1265C8.27186 9.41062 11.29 6.3876 14.9997 6.3876C18.7093 6.3876 21.7274 9.41062 21.7274 13.1294C21.7274 13.1402 21.7276 13.151 21.728 13.1618C21.7314 17.3496 22.3286 20.6474 23.5033 22.9637C23.6571 23.267 23.8119 23.5352 23.9639 23.7722H18.539Z" fill="#3B3A87"/>
+                </g>
+                <defs>
+                <clipPath id="clip0">
+                <rect width="30" height="30" fill="white"/>
+                </clipPath>
+                </defs>
+              </svg> 
+            <span matLine *ngIf="isExpanded">{{'main-side-nav.item-4' | translate}}</span>
+           </div>
+          </a> -->
+      <mat-divider></mat-divider>
+      <!-- NAV ITEM  : Profil -->
+      <a class='side-nav__nav__item' [routerLink]="['/profil']" [routerLinkActive]="['active']">
+        <div [style.width.vw]='!isExpanded ? "1.7" : "10"' class='side-nav__nav__item__inner-wrapper'>
+          <img matTooltip="Profil" class='side-nav__nav__item__icon' src="./../assets/avatars/{{user.avatar}}.svg"
+            alt="User avatar">
+          <span matLine *ngIf="isExpanded" class='side-nav__nav__item__txt'>{{'main-side-nav.item-5' | translate}}</span>
+        </div>
+      </a>
+    </nav>
+    <!-- SIDENAV FOOTER -->
+    <footer>
+      <!-- SIDENAV FOOTER LIST -->
+      <ul>
+        <!-- SIDENAV FOOTER LIST ITEM : REDUCE SIDENAV-->
+        <li (click)="toggleMenu()" class='side-nav__nav__item'>
+          <div [style.width.vw]='!isExpanded ? "1.7" : "10"' class='side-nav__nav__item__inner-wrapper'>
+            <img class='side-nav__nav__item__icon--lower' src="../../../assets/icons/Subtract.svg" alt="">
+            <span matLine *ngIf="isExpanded" class='side-nav__nav__item__txt--lower'>{{'main-side-nav.item-6' | translate}}</span>
+          </div>
+        </li>
+        <mat-divider></mat-divider>
+        <!-- SIDENAV FOOTER LIST ITEM : DISCONNECT-->
+        <li class='side-nav__nav__item' (click)="logout()">
+          <div [style.width.vw]='!isExpanded ? "1.7" : "10"' class='side-nav__nav__item__inner-wrapper'>
+            <img class='side-nav__nav__item__icon--lower' src="../../../assets/icons/v.svg" alt="">
+            <span matLine *ngIf="isExpanded" class='side-nav__nav__item__txt--lower'>{{'main-side-nav.item-7' | translate}}</span>
+          </div>
+        </li>
+      </ul>
+    </footer>
+  </mat-sidenav>
+
+  <mat-sidenav-content class='side-nav-content' [ngClass]="isExpanded ? 'expanded-content' : 'none-expanded-content'">
+    <router-outlet></router-outlet>
+    <!-- PANIC BUTTON -->
+    <button mat-button  class="panic-button" (click)="dialogService.openDialog('user-review-form','max-content','max-content')"><img *ngIf="user"
+        src="../../../assets/icons/panic_button.svg" alt=""></button>
+    <!-- MOBILE MENU-->
+    <!-- <mat-menu class="mobMenu" #globmenu="matMenu" fxShow="true" fxHide.gt-xs="true">
+      <nav class="mobMenuWrapper">
+        <li class="nav__item"><a class="nav__link" [routerLink]="['/']"><img class="nav__icon"
+              src="../../../assets/icons/dash_icon.svg" alt="">Dashboard</a></li>
+        <li class="nav__item"><a class="nav__link" [routerLink]="['/projects']"><img class="nav__icon"
+              src="../../../assets/icons/project_icon2.svg" alt="">Projets</a></li>
+        <li class="nav__item"><a class="nav__link" [routerLink]="['/algos']"><img class="nav__icon"
+              src="../../../assets/icons/algorithm.svg" alt="">Algorithmes</a></li>
+      </nav>
+    </mat-menu> -->
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

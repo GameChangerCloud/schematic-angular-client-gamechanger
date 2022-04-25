@@ -24,6 +24,7 @@
     "easygraphql-parser-gamechanger": "0.0.17",
     "inflection": "^1.13.1",
     "pluralize": "^8.0.0",
+    "rxjs": "^7.5.5",
     "yeoman-generator": "^5.4.2"
   }
 }

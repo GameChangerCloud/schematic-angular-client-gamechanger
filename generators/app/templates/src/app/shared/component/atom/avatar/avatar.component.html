@@ -1,0 +1,5 @@
+
+<div [ngClass]='type === "owner" ? "avatar--owner" : "avatar--collab" '>
+  <img  [ngClass]="[size === 's' ? 'small' : '',  size === 'm' ? 'medium' : '', size === 'l' ? 'large' : '']" matTooltipClass="app-tooltip" matTooltip="{{user.email}}"
+          src="../../../assets/avatars/{{user.avatar}}.svg" alt="">
+</div>

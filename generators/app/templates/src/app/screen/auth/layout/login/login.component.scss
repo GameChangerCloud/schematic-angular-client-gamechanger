@@ -1,0 +1,56 @@
+@import  '../../../../../assets/sass/mixins.scss';
+
+/**
+* Positionnement d'element
+* @param : string - $alignement
+**/
+@mixin flexColumn($alignement) {
+  display: flex;
+  flex-direction: column;
+  align-items: $alignement;
+}
+
+/******* COMPONENT SCSS START *******/
+
+.login {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+
+  &__left-section {
+    @include size(50vw, 100%);
+    background-color: var(--mainColor);
+    
+    &__title {
+      color: #ffffff;
+      @include poppins-set-config(2.5em,white,600,1.56em,0.0468em);
+      padding: 2.5vw;
+      white-space: pre-wrap;
+    }
+
+    &__img {
+      @include size(45vw);
+    }
+  }
+
+  &__right-section {
+
+    @include display-flex(center,null,column);
+    background-color: white;
+    width: 50vw;
+
+    &__header {
+      @include display-flex(center,null,column);
+      margin-top: 25vh;
+
+      &__title {
+        @include poppins-set-config(2em,var(--mainFontColor),500,null,0.01em);
+      }
+
+      &__logo {
+        width: 7vw;
+        padding: 2vw;
+      }
+    }
+  }
+}

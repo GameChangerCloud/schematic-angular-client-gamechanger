@@ -1,0 +1,55 @@
+
+/*-----------------------------------------------
+                CSS RESET
+-----------------------------------------------*/
+@import './assets/sass/reset.css';
+
+/*-----------------------------------------------
+                ANIMATE CSS LIB
+-----------------------------------------------*/
+
+@import '~animate.css/animate.min.css';
+
+/*-----------------------------------------------
+                   FONTS
+-----------------------------------------------*/
+
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600&display=swap');
+
+
+/*-----------------------------------------------
+                GLOBAL VARIABLE
+-----------------------------------------------*/
+
+:root 
+{	
+
+	/*** COLORS ***/
+
+	--mainColor: #3b3a87;
+	--secondaryColor: rgba(107, 104, 255, 0.2);
+	--thirdColor: #F6F6FF;
+	--actionColor:#E9BD6D;
+	--mainFontColor: #000033;
+	--subtitleColor: #979797;
+
+
+	/*** FONT SIZES ***/
+	// Title
+	--MainTitleFontSize: 10px;
+	
+	//Buttons
+	--actionButtonFontSize: 1.810436634717785vh;
+
+	/*** FONT FAMILY ***/
+	--mainFontFamily: 'Poppins', sans-serif;
+	
+	/*** PADDING ***/
+
+	/*** BOX SHADOW ***/
+	--cardShadow : 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.14);
+	--cardShadowHover: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+
+}
+
+

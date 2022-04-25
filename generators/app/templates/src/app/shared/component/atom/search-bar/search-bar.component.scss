@@ -1,0 +1,9 @@
+.search-bar {
+  padding-bottom: 2vh;
+  width: 65%;
+}
+
+::ng-deep .search-bar .mat-form-field-infix {
+  padding-top: 0 !important;
+  padding-bottom: 0.8vh;
+}

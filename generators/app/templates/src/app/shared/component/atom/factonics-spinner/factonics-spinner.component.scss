@@ -1,0 +1,21 @@
+@import '../../../../../assets/sass/mixins.scss';
+
+.spinner-wrapper {
+  @include display-flex(center,center,column);
+  height: 100%;
+  width: 100%;
+  
+  &__msg {
+    padding-top: 1vh;
+    @include poppins-set-config(1em, #747D88, 500,1.3em,null)
+  }
+
+  &__svg {
+    @include size(10vw,10vh);
+    animation-name: spin;
+    animation-duration: 2000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear; 
+  }
+
+}

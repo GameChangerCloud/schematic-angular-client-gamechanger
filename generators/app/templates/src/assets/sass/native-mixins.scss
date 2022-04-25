@@ -1,0 +1,11 @@
+:root 
+{
+  /**
+  * Align and center elements in column
+  */
+  --flexColumnCenter: {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
