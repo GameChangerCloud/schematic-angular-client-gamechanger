@@ -1,12 +1,12 @@
 # generator-angular-client-gamechanger
 
-Generator based on [Yeoman](https://yeoman.io/) that scaffolds the basic [Ngrx](https://ngrx.io/) logic in a [Angular](https://angular.io/) project based on a graphQL schema.
+Generator based on [@angular-devkit/schematics-cli](https://github.com/angular/angular-cli/blob/HEAD/packages/angular_devkit/schematics/README.md) that scaffolds the basic [Ngrx](https://ngrx.io/) logic in a [Angular](https://angular.io/) project based on a graphQL schema.
 
 ## Requirement
 
-- yeoman 
+- @angular-devkit/schematics-cli 
 ```
-npm install -g yo
+npm install -g @angular-devkit/schematics-cli
 ```
 - A valid graphQL schema
 - An AWS Account set up and configured on your machine ( best if you use the [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) to configure with `aws configure` command)
