@@ -4,11 +4,11 @@ import * as path from 'path';
 
 const collectionPath = path.join(__dirname, '../collection.json');
 
-describe('app', () => {
+describe('angular-client-gamechanger', () => {
   it('works', async () => {
     const runner = new SchematicTestRunner('schematics', collectionPath);
     const tree = await runner
-      .runSchematicAsync('app', {}, Tree.empty())
+      .runSchematicAsync('angular-client-gamechanger', {}, Tree.empty())
       .toPromise();
 
     expect(tree.files).toEqual([]);

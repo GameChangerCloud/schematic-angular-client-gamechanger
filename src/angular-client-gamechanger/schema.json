@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "0",
+  "title": "ng new options schema",
+  "type": "object",
+  "description": "Initialise a new Angular project with ngrx store",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name of the project",
+      "x-prompt": "Name :",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      }
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the project",
+      "x-prompt": "Description : ",
+      "$default": {
+        "$source": "argv",
+        "index": 1
+      }
+    },
+    "style": {
+      "type": "string",
+      "description": "Style to used in app",
+      "x-prompt": "Choose your style (css | scss | sass | less) : ",
+      "$default": {
+        "$source": "scss",
+        "index": 1
+      }
+    } 
+  }
+ }

@@ -20,17 +20,22 @@ schematics --help
  
 To Generate your angular app simply do :
 
-schematics angular_client_gamechanger --app-name=<my-app-name> --gql-schema=<path-to-gcl-schema>
+`schematics angular_client_gamechanger --app-name=<your-app-name> --gql-schema=<your-gcl-path-schema>`
 
 ## Schematic Developement Notes 
 
 ### Local developpement
 
-You can Execute schematic without publishing to npm simply do :
-schematics .:<my-tested-schematic> --debug=false
+You can Execute schematic without publishing to npm simply do in root folder:
+`schematics .:<my-tested-schematic> --debug=false`
 
-try to run ur schematic example by running this command :
-schematics .:test --debug=false
+try to run this schematic test to check if you are ready :
+`schematics .:test --debug=false`
+
+### Debug schematics
+
+To debug your schematics, you need to run with node in debugging mode:
+`node --inspect-brk $(which schematics) .:myComponent --name=test`
 
 ### Unit Testing
 

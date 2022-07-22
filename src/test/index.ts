@@ -5,7 +5,6 @@ import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 // per file.
 export function test(_options: any): Rule {
   return (tree: Tree, _context: SchematicContext) => {
-    tree.create('./generations/app_test/example.js', `console.log('Hello World');`);
-    return tree;
+    return tree && console.log("test done ! you are ready to test other schematics, to check list of available schematic try : schematics ./:--list-schematics");
   };
 }
