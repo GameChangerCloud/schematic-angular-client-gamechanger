@@ -14,7 +14,17 @@ schematics --help
 ```
 - A valid graphQL schema
 - An AWS Account set up and configured on your machine ( best if you use the [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) to configure with `aws configure` command to your [AWS Access Key] and [AWS Secret Access Key] )
-- A Cognito User group set up (see [AWS Cognito](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pool-as-user-directory.html))
+- A Cognito User group set up (see [AWS Cognito](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pool-as-user-directory.html)) :
+* userPoolBase : General settings > Pool Id
+* userPoolBaseUri : App integration > Domain
+* clientId : App integration > App client settings > ID
+* callbackUri : App integration > App client settings > Callback URL(s)
+* signoutUri : App integration > App client settings > Sign out URL(s)  
+
+- API Gateway URL
+* If you set up your graphQL server using out generator-aws-server-gamechanger tool, you can use the URL obtained in your constants file.   
+`<your-app-name>/src/constants/index.js`  
+
 
 ## Usage [In progress]
  

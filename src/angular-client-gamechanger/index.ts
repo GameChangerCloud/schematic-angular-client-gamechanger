@@ -27,7 +27,6 @@ export function angularClientGamechanger(_options: any): Rule {
     } catch (e) {
       return tree;
     }
-    
   }
 }
 

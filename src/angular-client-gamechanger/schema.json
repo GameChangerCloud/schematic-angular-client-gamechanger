@@ -17,7 +17,7 @@
     "description": {
       "type": "string",
       "description": "Description of the project",
-      "x-prompt": "Description : ",
+      "x-prompt": "Description your project : ",
       "$default": {
         "$source": "argv",
         "index": 1
@@ -28,9 +28,72 @@
       "description": "Style to used in app",
       "x-prompt": "Choose your style (css | scss | sass | less) : ",
       "$default": {
-        "$source": "scss",
+        "$source": "argv",
         "index": 1
       }
-    } 
+    },
+    "graphql": {
+      "type": "string",
+      "description": "Path of the graphQl schema",
+      "x-prompt": "Please fill your graphQL schema : ",
+      "$default": {
+        "$source": "argv",
+        "index": 1
+      }
+    },
+    "apiEndPoint": {
+      "type": "string",
+      "description": "API Uri to consume",
+      "x-prompt": "Please the API Uri to consume",
+      "$default": {
+        "$source": "argv",
+        "index": 1
+      }
+    },
+    "userPoolBase": {
+      "type": "string",
+      "description": "Cognito userPoolBase",
+      "x-prompt": "Please fill your userPoolBase (Domain) ",
+      "$default": {
+        "$source": "argv",
+        "index": 1
+      }
+    },
+    "userPoolBaseUri": {
+      "type": "string",
+      "description": "Cognito userPoolBaseUri",
+      "x-prompt": "Please fill your graphQL schema : ",
+      "$default": {
+        "$source": "argv",
+        "index": 1
+      }
+    },
+    "clientId": {
+      "type": "string",
+      "description": "Cogito clientId",
+      "x-prompt": "Please fill your cognito clientId : ",
+      "$default": {
+        "$source": "argv",
+        "index": 1
+      }
+    },
+    "callbackUri": {
+      "type": "string",
+      "description": "Cognito callbackUri",
+      "x-prompt": "Please fill your cognito callBackUri :  ",
+      "$default": {
+        "$source": "argv",
+        "index": 1
+      }
+    },
+    "signoutUri": {
+      "type": "string",
+      "description": "Cognito signout Uri",
+      "x-prompt": "Please fill your signoutUri : ",
+      "$default": {
+        "$source": "argv",
+        "index": 1
+      }
+    }
   }
  }
