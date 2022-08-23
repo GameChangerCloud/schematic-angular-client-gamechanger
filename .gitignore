@@ -35,6 +35,8 @@ override.tf.json
 /node_modules
 
 
+/package-lock.json
+
 # Outputs
 src/**/*.js
 src/**/*.js.map

@@ -1,0 +1,13 @@
+
+<mat-toolbar-row class="admin-nav">
+  <img class="admin-nav--icon"src="../../../../../assets/gamechanger/gamechanger-logo.png" alt="">
+  <ul class="admin-nav--list">
+    <li class="admin-nav--list--item" routerLink="/admin/tables" >Tables</li>
+    <li class="admin-nav--list--item" routerLink="/admin/home">Home</li>
+    <li class="admin-nav--list--item work-in" routerLink="/admin/models">
+     Models
+    </li>
+  </ul>
+
+  <button (click)='logout()' mat-stroked-button color="warn">Log out</button>
+</mat-toolbar-row>

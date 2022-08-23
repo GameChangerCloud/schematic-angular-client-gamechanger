@@ -1,6 +1,6 @@
 # generator-angular-client-gamechanger
 
-Generator based on [@angular-devkit/schematics-cli](https://github.com/angular/angular-cli/blob/HEAD/packages/angular_devkit/schematics/README.md) that scaffolds the basic [Ngrx](https://ngrx.io/) logic in a [Angular](https://angular.io/) project based on a GraphQL schema.
+Generator based on [Angular schematics cli](https://github.com/angular/angular-cli/blob/HEAD/packages/angular_devkit/schematics/README.md) that scaffolds the basic [Ngrx](https://ngrx.io/) logic in a [Angular](https://angular.io/) project based on a GraphQL schema.
 
 ## Requirement
 
@@ -15,11 +15,11 @@ schematics --help
 - A valid graphQL schema
 - An AWS Account set up and configured on your machine ( best if you use the [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) to configure with `aws configure` command to your [AWS Access Key] and [AWS Secret Access Key] )
 - A Cognito User group set up (see [AWS Cognito](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pool-as-user-directory.html)) :
-* userPoolBase : General settings > Pool Id
-* userPoolBaseUri : App integration > Domain
-* clientId : App integration > App client settings > ID
-* callbackUri : App integration > App client settings > Callback URL(s)
-* signoutUri : App integration > App client settings > Sign out URL(s)  
+* userPoolBase 
+* userPoolBaseUri 
+* clientId 
+* callbackUri 
+* signoutUri 
 
 - API Gateway URL
 * If you set up your graphQL server using out generator-aws-server-gamechanger tool, you can use the URL obtained in your constants file.   
@@ -30,7 +30,7 @@ schematics --help
  
 To Generate your angular app simply do :
 
-`schematics angular_client_gamechanger --app-name=<your-app-name> --gql-schema=<your-gcl-path-schema>`
+`schematics angular_client_gamechanger  --gqlPath=<your-gcl-path-schema>`
 
 ## Schematic Developement Notes 
 

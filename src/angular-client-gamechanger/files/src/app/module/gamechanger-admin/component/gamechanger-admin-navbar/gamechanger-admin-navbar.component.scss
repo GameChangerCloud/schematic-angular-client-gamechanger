@@ -1,0 +1,40 @@
+.admin-nav {
+  display: flex;
+  justify-content: space-between;
+  background-color: #282d38;
+  align-items: center;
+  height: 8vh;
+  padding: 3px;
+  
+  &--icon {
+    height: 90%;
+  }
+
+  &--list {
+    display: flex;
+    align-items: center;
+    
+    &--item {
+      color: white;
+      display: initial;
+      font-size: 13px;
+      padding-right: 21px;
+      font-weight: bolder;
+    }
+  }
+
+  &--logout-button {
+    padding: 5px 20px 5px 20px;
+    margin-right: 8px;
+    font-size: 13px;
+    background-color: #4523fb;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 27px;
+  }
+}
+
+.work-in {
+  color: gray;
+}

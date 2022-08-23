@@ -3,97 +3,51 @@
   "$id": "0",
   "title": "ng new options schema",
   "type": "object",
-  "description": "Initialise a new Angular project with ngrx store",
+  "description": "Generates a new basic application setup with ngrx store for your graphQL schema ",
   "properties": {
     "name": {
+      "description": "Name of the new app.",
       "type": "string",
-      "description": "The name of the project",
-      "x-prompt": "Name :",
-      "$default": {
-        "$source": "argv",
-        "index": 0
-      }
+      "pattern": "^(?:@[a-zA-Z0-9-*~][a-zA-Z0-9-*._~]*/)?[a-zA-Z0-9-~][a-zA-Z0-9-._~]*$",
+      "default": "default-app",
+      "x-prompt": "What name would you like to use for the application?"
     },
     "description": {
       "type": "string",
       "description": "Description of the project",
-      "x-prompt": "Description your project : ",
-      "$default": {
-        "$source": "argv",
-        "index": 1
-      }
+      "x-prompt": "Describe your app"
     },
-    "style": {
-      "type": "string",
-      "description": "Style to used in app",
-      "x-prompt": "Choose your style (css | scss | sass | less) : ",
-      "$default": {
-        "$source": "argv",
-        "index": 1
-      }
-    },
-    "graphql": {
+    "gqlPath": {
       "type": "string",
       "description": "Path of the graphQl schema",
-      "x-prompt": "Please fill your graphQL schema : ",
+      "minLength": 1,
       "$default": {
         "$source": "argv",
-        "index": 1
-      }
+        "index": 0
+      },
+      "x-prompt": "Please fill the path to your graphQL schema ",
     },
-    "apiEndPoint": {
+    "endpoint_uri": {
       "type": "string",
-      "description": "API Uri to consume",
-      "x-prompt": "Please the API Uri to consume",
-      "$default": {
-        "$source": "argv",
-        "index": 1
-      }
+      "description": "API to consume",
+      "minLength": 1,
+      "x-prompt": "Please fill endpoint Uri to consume",
+      "default":"<endpoint_uri>"
     },
-    "userPoolBase": {
+    "cognitoUserPoolId": {
       "type": "string",
-      "description": "Cognito userPoolBase",
-      "x-prompt": "Please fill your userPoolBase (Domain) ",
-      "$default": {
-        "$source": "argv",
-        "index": 1
-      }
+      "description": "Cognito user poolBase ID",
+      "minLength": 1,
+      "x-prompt": "Please fill your userpool base ID ",
+      "default":"<cognitoUserPoolId>"
     },
-    "userPoolBaseUri": {
+    "cognitoClientId": {
       "type": "string",
-      "description": "Cognito userPoolBaseUri",
-      "x-prompt": "Please fill your graphQL schema : ",
-      "$default": {
-        "$source": "argv",
-        "index": 1
-      }
-    },
-    "clientId": {
-      "type": "string",
-      "description": "Cogito clientId",
-      "x-prompt": "Please fill your cognito clientId : ",
-      "$default": {
-        "$source": "argv",
-        "index": 1
-      }
-    },
-    "callbackUri": {
-      "type": "string",
-      "description": "Cognito callbackUri",
-      "x-prompt": "Please fill your cognito callBackUri :  ",
-      "$default": {
-        "$source": "argv",
-        "index": 1
-      }
-    },
-    "signoutUri": {
-      "type": "string",
-      "description": "Cognito signout Uri",
-      "x-prompt": "Please fill your signoutUri : ",
-      "$default": {
-        "$source": "argv",
-        "index": 1
-      }
-    }
-  }
+      "description": "Cogito client Id",
+      "minLength": 1,
+      "x-prompt": "Please fill your cognito client Id : ",
+      "default":"<cognitoClientId>"
+    } 
+  },
+  "required": ["name","gqlPath"]
  }

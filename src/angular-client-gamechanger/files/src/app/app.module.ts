@@ -1,14 +1,24 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AngularMaterialModule } from './module/angular-material.module';
+
+/**** MODULE ****/
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule } from './app-routing.module';
+import { GamechangerAdminModule } from './module/gamechanger-admin/gamechanger-admin.module';
+
+/**** LAYOUTS COMPONENT ****/
+import { GamechangerSuccessLayoutComponent } from './layout/gamechanger-success-layout/gamechanger-success-layout.component';
+import { GamechangerPagenotfoundLayoutComponent } from './layout/gamechanger-pagenotfound-layout/gamechanger-pagenotfound-layout.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    GamechangerSuccessLayoutComponent,
+    GamechangerPagenotfoundLayoutComponent,
   ],
   imports: [
     BrowserModule,
@@ -16,6 +26,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CoreModule,
     SharedModule,
     BrowserAnimationsModule,
+    AngularMaterialModule,
+    GamechangerAdminModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
