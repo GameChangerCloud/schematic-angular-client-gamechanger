@@ -39,17 +39,17 @@ export class GamechangerAdminLoginComponent implements OnInit {
         UserPoolId: environment.cognitoUserPoolId,
         ClientId: environment.cognitoClientId 
       };
-
+      
       let userPool = new CognitoUserPool(poolData);
       let userData = { Username: this.email, Pool: userPool };
       var cognitoUser = new CognitoUser(userData);
       cognitoUser.authenticateUser(authenticationDetails, {
-        onSuccess: (result) => {
+        onSuccess: (result:any) => {
           let token =result.getIdToken().getJwtToken()
           this.authService.setToken(token)
           this.router.navigate(["admin/home"])
         },
-        onFailure: (err) => {
+        onFailure: (err:any) => {
           alert(err.message || JSON.stringify(err));
           this.isLoading = false;
           this.loginError = true;

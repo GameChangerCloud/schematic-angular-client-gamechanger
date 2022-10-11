@@ -1,0 +1,38 @@
+<div class="login-wrapper" fxLayout="row" fxLayoutAlign="center center">
+  <!-- LOGIN CARD -->
+  <mat-card class="box" *ngIf="!isLoading">
+    <!-- CARD HEADER -->
+    <div class='box-header'>
+      <img src="../../../../../assets/gamechanger/gamechanger-logo.png" alt="">
+      <h1> Admin panel </h1>
+    </div>
+    <!-- CARD FORM -->
+    <form  #signInForm="ngForm" ngNativeValidate class="example-form">
+      <mat-card-content>
+         <!-- EMAIL INPUT -->
+        <mat-form-field appearance="outline" class="example-full-width">
+          <input matInput [(ngModel)]="email" name="email"
+          type="email"
+          required
+          class="form-control"
+          id="email"
+          placeholder="enter your Email" >
+        </mat-form-field>
+        <!-- PWD INPUT -->
+        <mat-form-field appearance="outline" class="example-full-width">
+          <input matInput [(ngModel)]="password"
+          name="password"
+          type="password"
+          required
+          class="form-control"
+          id="password"
+          placeholder="Enter a password" >
+        </mat-form-field>
+      </mat-card-content>
+      <!-- SUBMIT BUTTON -->
+      <button mat-stroked-button color="red" class="btn-block" type="button" (click)="onSubmit(signInForm)">Log in</button>
+    </form>
+  </mat-card>
+  <!-- LOADER -->
+  <gamechanger-admin-loader *ngIf="isLoading"></gamechanger-admin-loader>
+</div>

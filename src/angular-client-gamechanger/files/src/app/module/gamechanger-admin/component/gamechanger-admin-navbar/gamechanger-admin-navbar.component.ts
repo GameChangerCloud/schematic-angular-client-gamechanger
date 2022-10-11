@@ -12,10 +12,10 @@ export class GamechangerAdminNavbarComponent implements OnInit {
 
   activatedRoute = "";
 
-  models = [
-    {name: 'work', viewValue: 'Work'},
-    {name: 'employe', viewValue: 'Employe'},
-  ];
+  // models = [
+  //   {name: 'work', viewValue: 'Work'},
+  //   {name: 'employe', viewValue: 'Employe'},
+  // ];
 
   constructor(private router: Router) { }
 
@@ -39,10 +39,10 @@ export class GamechangerAdminNavbarComponent implements OnInit {
     this.activatedRoute = activatedRoute;
   }
 
-  navigateTo(value:string) {
-    if (value) {
-        this.router.navigate(['admin/models/',value]);
-    }
-    return false;
-}
+  // navigateTo(value:string) {
+  //   if (value) {
+  //       this.router.navigate(['admin/models/',value]);
+  //   }
+  //   return false;
+  // }
 }
