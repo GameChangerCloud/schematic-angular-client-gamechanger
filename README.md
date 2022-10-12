@@ -1,6 +1,6 @@
-# generator-angular-client-gamechanger
+# angular-client-gamechanger
 
-Generator based on [Angular schematics cli](https://github.com/angular/angular-cli/blob/HEAD/packages/angular_devkit/schematics/README.md) that scaffolds the basic [Ngrx](https://ngrx.io/) logic in a [Angular](https://angular.io/) project based on a GraphQL schema.
+Generator based on [Angular schematics cli](https://github.com/angular/angular-cli/blob/HEAD/packages/angular_devkit/schematics/README.md) that scaffolds the basic [Ngrx](https://ngrx.io/) logic in a [Angular](https://angular.io/) using GraphQL at entry point.
 
 ## Requirement
 

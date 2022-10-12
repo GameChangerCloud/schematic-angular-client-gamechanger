@@ -15,10 +15,10 @@ import {
   // branchAndMerge
 } from '@angular-devkit/schematics';
 
-import { 
-  schemaParser, 
+import {
+  schemaParser,
   getRelations,
-  typesGenerator 
+  typesGenerator,
 } from 'easygraphql-parser-gamechanger';
 const fs = require('fs');
 const path = require('path');
@@ -30,7 +30,7 @@ const path = require('path');
 export function angularClientGamechanger(_options: any): Rule {
   return (_tree: Tree, _context: SchematicContext) => {
     /**
-     * Check required options
+     * CHECK REQUIRED OPTIONS
      */
     if (!_options.name) {
       throw new SchematicsException('Option (name) is required.');
@@ -40,20 +40,9 @@ export function angularClientGamechanger(_options: any): Rule {
     }
 
     /**
-     * Init types
-     * (Check getTypes function comment to have more info about types)
+     * INIT TYPES
      */
-    let types = getTypes();
-
-    let typesWithRelation = getTypesRelations(types)
-
-    // console.log(typesWithRelation);
-
-    for (let i = 0; i < typesWithRelation.length; i++) {
-      const element = typesWithRelation[i];
-      console.log("====> relations",element);
-    }
-    
+    let types = initTypes(_options.gqlPath);
 
     /**
      * NGRX DATA files creation
@@ -61,9 +50,13 @@ export function angularClientGamechanger(_options: any): Rule {
 
     createEntitiesServicesFiles(types, _tree, _options.name);
 
-    createEntitiesModelsFiles(types, _tree, _options.name);
+    createEntitiesTsModelsFiles(types, _tree, _options.name);
 
-    // Generate app templates
+    // createCustomDataServicesFiles(types, _tree, _options.name)
+
+    /**
+     * Generate app from ur templates
+     */
     const templateSource = apply(url('./files'), [
       template({
         ...strings,
@@ -79,53 +72,66 @@ export function angularClientGamechanger(_options: any): Rule {
 
 /**
  * Parse graphQL schema with easygraphqlparser from gamechanger-parser
- * Find types structure from the gamechanger-parser there:
+ * Find types structure from gamechanger-parser there:
  * https://github.com/GameChangerCloud/easygraphql-parser-gamechanger
+ * OR https://www.notion.so/GameChanger-df7d7d25885144e9a4f185a272f91e7a
+ * TODO : Fix gql path
  * @returns types
  */
-function getTypes() {
+function initTypes(gclPath: string) {
+  // console.log(gclPath);
+  // console.log(__dirname);
+  gclPath;
+
   const schemaCode = fs.readFileSync(
     path.join(__dirname, '../../graphql-examples', 'employe-schema.graphql'),
     'utf8'
   );
 
+  // 1 - Basic Parsing of the schema
   let types = schemaParser(schemaCode);
-  let enrichedTypes= typesGenerator(types)
+  // 2 - Enriched parsing with typesGenerator()
+  types = typesGenerator(types);
+  // 3 - Add relation & directivity info in the types
+  types = getRelations(types);
 
-  return enrichedTypes;
+  return types;
 }
 
 /**
  * @param types Detailed JSON about the graphQL schema used for the generation
  * @param _tree Current tree where files are created
  * @param projectName name of the generated project
- * TODO : catch schematics creation error
- * TODO : return true false
+ * TODO : 1 - catch schematics creation error | 2 - add return true/false
  */
 function createEntitiesServicesFiles(
   types: any,
   _tree: Tree,
   projectName: string
 ) {
-  for (const type in types) {
-    // Init and fill service file template
+  for (let i = 0; i < types.length; i++) {
+    const type = types[i];
     let serviceFileTemplate = `import { Injectable } from '@angular/core';
     import {
       EntityCollectionServiceBase,
       EntityCollectionServiceElementsFactory
     } from '@ngrx/data';
-    import { ${type} } from '../models/${strings.camelize(type)}';
+    import { ${type.typeName} } from '../models/${strings.camelize(
+      type.typeName
+    )}';
      
     @Injectable({ providedIn: 'root' })
-    export class ${type}Service extends EntityCollectionServiceBase<${type}> {
+    export class ${type.typeName}Service extends EntityCollectionServiceBase<${
+      type.typeName
+    }> {
       constructor(serviceElementsFactory: EntityCollectionServiceElementsFactory) {
-        super('${type}', serviceElementsFactory);
+        super('${type.typeName}', serviceElementsFactory);
       }
     }`;
     // Create Service file
     _tree.create(
       `${projectName}/src/app/store/service/${strings.camelize(
-        type
+        type.typeName
       )}.service.ts`,
       serviceFileTemplate
     );
@@ -136,22 +142,25 @@ function createEntitiesServicesFiles(
  * Create TS Model file for each type
  * @param types Detailed JSON about the graphQL schema used for the generation
  * @param _tree Current tree where files are created
+ * TODO : 1 - catch schematics creation error | 2 - add return true/false
  */
-function createEntitiesModelsFiles(
+function createEntitiesTsModelsFiles(
   types: any,
   _tree: Tree,
   projectName: string
 ) {
   // Start Loop to create entity model file for each type
-  for (const type in types) {
+  for (let i = 0; i < types.length; i++) {
+    const type = types[i];
+
     /** Init model file template **/
     let modelFileTemplate = ``;
 
     /** Generate Model Imports **/
     let importsTemplate = ``;
     // Find field to be imported
-    for (let i = 0; i < types[type].fields.length; i++) {
-      const field = types[type].fields[i];
+    for (let i = 0; i < type.fields.length; i++) {
+      const field = type.fields[i];
       if (
         field.type !== 'String' &&
         field.type !== 'ID' &&
@@ -169,14 +178,14 @@ function createEntitiesModelsFiles(
 
     /** Generate Model Class **/
     // Init template
-    let classTemplate = `export class ${type} { 
+    let classTemplate = `export class ${type.typeName} { 
         <Fields> 
     }`;
 
     // Generate fields
     let fields = '';
-    for (let i = 0; i < types[type].fields.length; i++) {
-      const field = types[type].fields[i];
+    for (let i = 0; i < type.fields.length; i++) {
+      const field = type.fields[i];
       if (
         field.type === 'String' ||
         field.type === 'ID' ||
@@ -186,15 +195,15 @@ function createEntitiesModelsFiles(
         if (field.type === 'ID') {
           fieldType = 'number';
         }
-        let fieldToTsType = `  public ${field.name}${requiredField(
+        let fieldToTsType = `  public ${field.name}${setupRequiredFieldInTsModel(
           field.noNull
         )}: ${fieldType};\n`;
         fields += fieldToTsType;
       } else {
         // let fieldType = field.type;
-        let fieldToTsType = `  public ${field.name}${requiredField(
+        let fieldToTsType = `  public ${field.name}${setupRequiredFieldInTsModel(
           field.noNull
-        )}: ${getRelation()};\n`;
+        )}: ${setupRelationValueInTsModel(field.type,field.relationType)};\n`;
         fields += fieldToTsType;
       }
     }
@@ -204,31 +213,38 @@ function createEntitiesModelsFiles(
 
     /** Create model in current passed tree **/
     _tree.create(
-      `${projectName}/src/app/store/models/${strings.camelize(type)}.ts`,
+      `${projectName}/src/app/store/models/${strings.camelize(
+        type.typeName
+      )}.ts`,
       modelFileTemplate
     );
   }
 }
 
+
+
+
 /**
- * Get field relation
+ * Setup field value for relation field 
+ * @param relationType 
+ * @param fieldType 
+ * @return fieldValue  
+ * TODO : setup typing for relationType
  */
-function getTypesRelations(types:any) {
-
-  let typesWithRelations = getRelations(types)
-  
-  // console.log('====> relations',typesWithRelations);
-  // for (let i = 0; i < typesWithRelations.length; i++) {
-  //   const element = typesWithRelations[i];
-  //   console.log(element);
-  // }
-  
-  return typesWithRelations
-
-}
-
-function getRelation(){
-
+function setupRelationValueInTsModel(fieldType:string, relationType:any) {
+  console.log(relationType, fieldType);
+  let fieldValue = `"${fieldType}"`
+  switch (relationType) {
+    case 'manyToOne':
+      fieldValue = fieldValue.replace(/"([^"]*)"/g, '[$1]');
+      break;
+    case 'oneToMany':
+      fieldValue = fieldValue.replace(/"([^"]*)"/g, '$1');
+      break;
+    default:
+      break;
+  }
+  return fieldValue
 }
 
 /**
@@ -236,6 +252,6 @@ function getRelation(){
  * @param required true | false
  * @returns true : ! | false : ?
  */
-function requiredField(required: boolean) {
+function setupRequiredFieldInTsModel(required: boolean) {
   return required ? '!' : '?';
 }

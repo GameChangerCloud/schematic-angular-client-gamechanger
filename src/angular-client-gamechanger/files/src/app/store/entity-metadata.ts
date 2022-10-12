@@ -2,15 +2,15 @@ import {EntityDataModule,EntityMetadataMap, DefaultDataServiceConfig} from  '@ng
 
 
 const entityMetadata: EntityMetadataMap = { 
-  <% for (const type in types) { %> 
-    <%=type%> : {},
+  <% for (let i = 0; i < types.length; i++) { %> 
+    <%=types[i].typeName%> : {},
   <% } %> 
 } ;
 
 
 const pluralNames =  { 
-  <% for (const type in types) { %> 
-    <%=type%> : '<%=type%>s',
+  <% for (let i = 0; i < types.length; i++) { %> 
+    <%=types[i].typeName%> : '<%=types[i].typeName%>s',
   <% } %> 
 }
 

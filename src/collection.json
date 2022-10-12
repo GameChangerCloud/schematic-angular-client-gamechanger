@@ -7,7 +7,7 @@
       "schema": "./angular-client-gamechanger/schema.json"
     },
     "test": {
-      "description": "simple schematic test",
+      "description": "simple schematic to test that's everything work with your environnement",
       "factory": "./test/index#test"
     }
   }
