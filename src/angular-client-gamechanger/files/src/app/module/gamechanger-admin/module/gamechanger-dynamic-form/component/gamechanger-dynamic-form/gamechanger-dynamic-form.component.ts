@@ -1,8 +1,9 @@
+import { camelize } from '@angular-devkit/core/src/utils/strings';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { SchemaTypesService } from 'src/app/module/gamechanger-admin/services/schema-types.service';
+import { GamechangerParserService } from 'src/app/module/gamechanger-admin/services/gamechanger-parser.service';
 import { EmployeService } from 'src/app/store/service/employe.service';
 import { WorkService } from 'src/app/store/service/work.service';
 import { QuestionBase } from '../../models/questions/question-base';
@@ -29,7 +30,13 @@ export class GamechangerDynamicFormComponent implements OnInit {
     private route: ActivatedRoute,
     private qcs: QuestionControlService, 
     private qs: QuestionService, 
-    private schemaTypes: SchemaTypesService,
+    private schemaTypes: GamechangerParserService,
+
+    <% for (let i = 0; i < types.length; i++) { %> 
+    private <%=decamelize(types[i].typeName)%>Service : <%=types[i].typeName%>Service,
+    <% } %> 
+    // private employeService: EmployeService,
+    // private workService: WorkService
     // GENERATED : private <entity_name>Service: <entity_name>Service,
 
   ){

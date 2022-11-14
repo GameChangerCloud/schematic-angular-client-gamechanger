@@ -17,15 +17,12 @@
       "description": "Description of the project",
       "x-prompt": "Describe your app"
     },
-    "gqlPath": {
+    "gqlFileName": {
       "type": "string",
       "description": "Path of the graphQl schema",
       "minLength": 1,
-      "$default": {
-        "$source": "argv",
-        "index": 0
-      },
-      "x-prompt": "Please fill the path to your graphQL schema ",
+      "default":"employe-schema",
+      "x-prompt": "Please fill the name of your graphQL schema (put schema file in : /graphql-schemas/<your-schema-name>.graphql)"
     },
     "endpoint_uri": {
       "type": "string",
@@ -49,5 +46,5 @@
       "default":"<cognitoClientId>"
     } 
   },
-  "required": ["name","gqlPath"]
+  "required": ["name","gqlFileName"]
  }

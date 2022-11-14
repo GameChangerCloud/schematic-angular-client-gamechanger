@@ -28,7 +28,7 @@ export class EntityStoreModule {
   ) {
     // GENERATED : entityDataService.registerService('<ENTITY_NAME>', <ENTITY_NAME>DataService);,
     <% for (let i = 0; i < types.length; i++) { %> 
-      entityDataService.registerSsrvice('<%=types[i].typeName%>',<%=camelize(types[i].typeName)%>DataService);
+      entityDataService.registerService('<%=types[i].typeName%>',<%=camelize(types[i].typeName)%>DataService);
     <% } %> 
     
     // <-- register new dataService there

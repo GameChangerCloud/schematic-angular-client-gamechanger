@@ -10,9 +10,6 @@ import {
   Tree,
   url,
   chain,
-  // forEach,
-  // FileEntry,
-  // branchAndMerge
 } from '@angular-devkit/schematics';
 
 import {
@@ -20,29 +17,36 @@ import {
   getRelations,
   typesGenerator,
 } from 'easygraphql-parser-gamechanger';
+
 const fs = require('fs');
 const path = require('path');
 
 /**
+ * MAIN RULE OF THIS SCHEMATIC
+ * Generate  new angular-client-gamechanger in root dir
  * @param _options Options from schematics schema
- * @returns gamechanger-angular-client
+ * @returns <custom-gamechanger-angular-client>
  */
 export function angularClientGamechanger(_options: any): Rule {
   return (_tree: Tree, _context: SchematicContext) => {
     /**
      * CHECK REQUIRED OPTIONS
      */
+
     if (!_options.name) {
       throw new SchematicsException('Option (name) is required.');
     }
-    if (!_options.gqlPath) {
-      throw new SchematicsException('Option (graphql path) is required.');
+
+    if(!_options.gqlFileName){
+      throw new SchematicsException('GCL schema File name is required.');
     }
+
 
     /**
      * INIT TYPES
      */
-    let types = initTypes(_options.gqlPath);
+    let types = initTypes(_options.gqlFileName);
+
 
     /**
      * NGRX DATA files creation
@@ -52,10 +56,10 @@ export function angularClientGamechanger(_options: any): Rule {
 
     createEntitiesTsModelsFiles(types, _tree, _options.name);
 
-    // createCustomDataServicesFiles(types, _tree, _options.name)
+    createCustomDataServicesFiles(types, _tree, _options.name);
 
     /**
-     * Generate app from ur templates
+     * Generate app from the template-app
      */
     const templateSource = apply(url('./files'), [
       template({
@@ -78,13 +82,11 @@ export function angularClientGamechanger(_options: any): Rule {
  * TODO : Fix gql path
  * @returns types
  */
-function initTypes(gclPath: string) {
-  // console.log(gclPath);
-  // console.log(__dirname);
-  gclPath;
+function initTypes(gcpFileName: string) {
+  gcpFileName;
 
   const schemaCode = fs.readFileSync(
-    path.join(__dirname, '../../graphql-examples', 'employe-schema.graphql'),
+    path.join(__dirname, '../../graphql-schemas', `${gcpFileName}.graphql`),
     'utf8'
   );
 
@@ -94,15 +96,122 @@ function initTypes(gclPath: string) {
   types = typesGenerator(types);
   // 3 - Add relation & directivity info in the types
   types = getRelations(types);
+  // 4 - enriche types with graphQL queries for each types
+  let queryPlaceholders = {placeholderId : 'id',placeholderFields : 'entity'};
+  types = getGqlQueries(types,queryPlaceholders);
+  
+  return types;
+}
+
+/**
+ * Add GCL queries for each types
+ * @param types
+ * @returns types with queries
+ */
+function getGqlQueries(types: any, queriesPlaceholders: any) {
+  for (let i = 0; i < types.length; i++) {
+    let type = types[i];
+
+    let queries = {
+      getAll: getGqlQuery('GetAll', type),
+      getById: getGqlQuery('GetById',type,queriesPlaceholders),
+      create: getGqlQuery('Create', type,queriesPlaceholders),
+      update: getGqlQuery('Update',type,queriesPlaceholders),
+      delete: getGqlQuery('Delete',type,queriesPlaceholders),
+    };
+    type.queries = queries;
+  }
 
   return types;
 }
 
 /**
+ * Generate graphQL query from gamechanger type info
+ * Support: 5 queryType | 2 level nested object
+ * @param queryType 'GetAll'| 'GetById'|'Create' |'Update'|'Delete'
+ * @param typeName
+ * @param typeFields
+ * @returns GraphQL query | i.e : { employes {id,name,work{id},...}}
+ */
+function getGqlQuery(
+  queryType: 'GetAll' | 'GetById' | 'Create' | 'Update' | 'Delete',
+  type:any,
+  queriesPlaceholders?: {placeholderId:string,placeholdeFields:string}
+
+) {
+  let query;
+  let placeholderId = queriesPlaceholders?.placeholderId
+  let placeholderFields = queriesPlaceholders?.placeholderId
+  placeholderId ? '': placeholderId = 'id'
+  placeholderFields ? '': placeholderFields = 'entity'
+
+  let queries = {
+    GetAll: function () {
+      let typeNameplurals = strings.camelize(type.typeName) + 's';
+      let queryFields = '';
+      type.fields.forEach((field:any) => {
+        field.type === 'String' || field.type === 'Number' || field.type === 'Boolean' || field.type ==='ID'
+          ? (queryFields += field.name + ',')
+          : (queryFields += `${field.name}{id}`);
+      });
+      // i.e :  { employes {id,name,work{id},...}}
+      query = `\`{${typeNameplurals} {${queryFields}}}\``;
+      // Delete last comma
+
+    },
+    GetById: function () {
+      let queryFields = '';
+      let placeholderId = queriesPlaceholders?.placeholderId
+      placeholderId ? '': placeholderId = 'id'
+
+      type.fields.forEach((field:any) => {    
+        field.type === 'String' || field.type === 'Number' || field.type === 'Boolean' || field.type ==='ID'
+          ? queryFields += field.name + ','
+          : queryFields += `${field.name}{id}`;
+      });
+
+      query = `\`{${strings.camelize(type.typeName)}(id:\${${placeholderId}}) {${queryFields}}}\``;
+      
+    },
+    Create: function () {
+      query = `'TOFIX'`;
+      //"mutation {workCreate(id :  , job :  , salary :  , empl :  , Fk_workInfo_employe_id :  , ){ id,  job,  salary,   empl{id},  Fk_workInfo_employe_id, }}"
+    },
+    Update: function () {
+      let queryFields = '';
+      type.fields.forEach((field: any) => {
+
+        field.type === 'String' || 'Number' || 'Boolean' || 'ID'
+          ? (queryFields += `${field.name}: \${${placeholderId}}`)
+          : '';
+      });
+      query = `'TOFIX'`
+      // Test and convert
+      //"mutation {employeUpdate(id :  , email :  , firstName :  , lastName :  , login :  , password :  , workInfo :  , Fk_empl_employe_id :  , ){ id,  email,  firstName,  lastName,  login,  password,   workInfo{id},  Fk_empl_employe_id, }}"
+
+    },
+    Delete: function () {
+      let queryFields = '';
+    
+      type.fields.forEach((field:any) => {    
+        field.type === 'String' || field.type === 'Number' || field.type === 'Boolean' || field.type ==='ID'
+          ? queryFields += field.name + ','
+          : queryFields += `${field.name}{id}`;
+      });
+      query = `\`mutation {${strings.camelize(
+        type.typeName
+      )}Delete (id:\${${placeholderId}}) {${queryFields}}}\``;
+    },
+  };
+  queries[queryType]();
+  return query;
+}
+
+/**
+ * Create service file in the new project for each entity
  * @param types Detailed JSON about the graphQL schema used for the generation
  * @param _tree Current tree where files are created
  * @param projectName name of the generated project
- * TODO : 1 - catch schematics creation error | 2 - add return true/false
  */
 function createEntitiesServicesFiles(
   types: any,
@@ -116,14 +225,10 @@ function createEntitiesServicesFiles(
       EntityCollectionServiceBase,
       EntityCollectionServiceElementsFactory
     } from '@ngrx/data';
-    import { ${type.typeName} } from '../models/${strings.camelize(
-      type.typeName
-    )}';
+    import { ${type.typeName} } from '../models/${strings.camelize(type.typeName)}';
      
     @Injectable({ providedIn: 'root' })
-    export class ${type.typeName}Service extends EntityCollectionServiceBase<${
-      type.typeName
-    }> {
+    export class ${type.typeName}Service extends EntityCollectionServiceBase<${type.typeName}> {
       constructor(serviceElementsFactory: EntityCollectionServiceElementsFactory) {
         super('${type.typeName}', serviceElementsFactory);
       }
@@ -142,7 +247,6 @@ function createEntitiesServicesFiles(
  * Create TS Model file for each type
  * @param types Detailed JSON about the graphQL schema used for the generation
  * @param _tree Current tree where files are created
- * TODO : 1 - catch schematics creation error | 2 - add return true/false
  */
 function createEntitiesTsModelsFiles(
   types: any,
@@ -195,15 +299,17 @@ function createEntitiesTsModelsFiles(
         if (field.type === 'ID') {
           fieldType = 'number';
         }
-        let fieldToTsType = `  public ${field.name}${setupRequiredFieldInTsModel(
-          field.noNull
-        )}: ${fieldType};\n`;
+        let fieldToTsType = `  public ${
+          field.name
+        }${setupRequiredFieldInTsModel(field.noNull)}: ${fieldType};\n`;
         fields += fieldToTsType;
       } else {
         // let fieldType = field.type;
-        let fieldToTsType = `  public ${field.name}${setupRequiredFieldInTsModel(
+        let fieldToTsType = `  public ${
+          field.name
+        }${setupRequiredFieldInTsModel(
           field.noNull
-        )}: ${setupRelationValueInTsModel(field.type,field.relationType)};\n`;
+        )}: ${setupRelationValueInTsModel(field.type, field.relationType)};\n`;
         fields += fieldToTsType;
       }
     }
@@ -221,123 +327,131 @@ function createEntitiesTsModelsFiles(
   }
 }
 
+/**
+ * Create  Ngrx Dataservices file for each type
+ * @param types Detailed JSON about the graphQL schema used for the generation
+ * @param _tree Current tree where files are created
+ */
+function createCustomDataServicesFiles(
+  types: any,
+  _tree: Tree,
+  projectName: string
+) {
+  for (let i = 0; i < types.length; i++) {
+    const type = types[i];
 
-// function createCustomDataServicesFiles(types:any, _tree: Tree, projectName:string){
-//   console.log(types,_tree,projectName);
-//   let dataServiceTemplate = 
-//  `import { Injectable } from '@angular/core';
-//   import { HttpClient } from '@angular/common/http';
-//   import {
-//     EntityCollectionDataService,
-//     DefaultDataService,
-//     HttpUrlGenerator,
-//     Logger,
-//     QueryParams,
-//   } from '@ngrx/data';
-//   import { Observable } from 'rxjs';
-//   import { map } from 'rxjs/operators';
-//   import { environment } from 'src/environments/environment';
-//   import { Update } from '@ngrx/entity';
-  
-  
-//   // GENERATED : import { <Entity-name> } from '../models/<entity-name>';
-  
-  
-//   @Injectable()
-//   export class EmployeDataService extends DefaultDataService<Employe> {
-//     constructor(
-//       http: HttpClient,
-//       httpUrlGenerator: HttpUrlGenerator,
-//       logger: Logger
-//     ) {
-//       super('Employe', http, httpUrlGenerator);
-//       logger.log('Created custom Employe EntityDataService');
-//     }
-  
-//     override add(entity: Employe): Observable<Employe> {
-//       let query = {
-//         query : `mutation {employeCreate(id :  "${entity.id}", email :  "${entity.email}", login :  "${entity.login}", password : "${entity.password}" ){ id,  email, login,  password }}`
-//       };
-  
-//       let query2  = "mutation {employeCreate(id :  , email :  , firstName :  , lastName :  , login :  , password :  , workInfo :  , Fk_empl_employe_id :  , ){ id,  email,  firstName,  lastName,  login,  password,   workInfo{id},  Fk_empl_employe_id, }}"
-  
-//       console.log(query);
-      
-//       return this.http
-//       .post(environment.endpoint_uri, query)
-//       .pipe(map((result) => this.mapAdd(result)));
-//     }
-  
-//     override getAll(): Observable<Employe[]> {
-//       let query = {
-//         query:
-//           `{employes {id,firstName,lastName,email,login,password,workInfo{id}}}`,
-//       };
-  
-//       return this.http
-//         .post(environment.endpoint_uri, query)
-//         .pipe(map((result) => this.mapEmployes(result)));
-//     }
-  
-//     override getById(id: string | number): Observable<Employe> {
-//       let query = {
-//         query: `{employe(id:${id}) {id,firstName,lastName,email,firstName,lastName,login,password,workInfo{work_id}}}`,
-//       };
-//       return this.http
-//         .post(environment.endpoint_uri, query)
-//         .pipe(map((result) => this.mapEmploye(result)));
-//     }
-  
-//     override delete(key: string | number): Observable<string | number> {
-//       let query = {
-//         query: `mutation { employeDelete ( id:${key}){id,firstName,lastName,email,firstName,lastName,login,password}}`,
-//       };
-//       return this.http
-//         .post(environment.endpoint_uri, query)
-//         .pipe(map((result) => this.mapEmploye(result)));
-//     }
-  
-//     override update(update: Update<Employe>): Observable<Employe> {
-//       let query = {
-//         query: `mutation { employeUpdate ( id:${update.id},firstName:${update.changes.firstName},lastName:${update.changes.lastName},email:${update.changes.email},login:${update.changes.login},password:${update.changes.password}){firstName}}`,
-//       };
-//       return this.http
-//         .post(environment.endpoint_uri, query)
-//         .pipe(map((result) => this.mapEmploye(result)));
-//     }
-  
-//     mapEmployes(result: any) {
-//       console.log(result);
-      
-//       return result.data.employes;
-//     }
-  
-//     mapEmploye(result: any) {
-//       return result.data.employe;
-//     }
-  
-//     mapUpdate(result: any) {
-  
-//       return result.data.employe;
-//     }
-//     mapAdd(result: any) {
-//       console.log(result);
-      
-//       return result.data;
-//     }
-//   }`
-// }
+    let dataServiceTemplate = `import { Injectable } from '@angular/core';
+     import { HttpClient } from '@angular/common/http';
+     import {
+       EntityCollectionDataService,
+       DefaultDataService,
+       HttpUrlGenerator,
+       Logger,
+       QueryParams,
+     } from '@ngrx/data';
+     import { Observable } from 'rxjs';
+     import { map } from 'rxjs/operators';
+     import { environment } from 'src/environments/environment';
+     import { Update } from '@ngrx/entity';
+     import { ${type.typeName} } from '../models/${strings.camelize(
+      type.typeName
+    )}';
+     
+     @Injectable()
+     export class ${type.typeName}DataService extends DefaultDataService<${
+      type.typeName
+    }> {
+       constructor(
+         http: HttpClient,
+         httpUrlGenerator: HttpUrlGenerator,
+         logger: Logger
+       ) {
+         super('${type.typeName}', http, httpUrlGenerator);
+         logger.log('Created custom ${type.typeName} EntityDataService');
+       }
+     
+       override getAll(): Observable<${type.typeName}[]> {
+         let query = {
+           query: ${type.queries.getAll}
+         };
+     
+         return this.http
+           .post(environment.endpoint_uri, query)
+           .pipe(map((result) => this.map${type.typeName}s(result)));
+       }
+
+       override getById(id: string | number): Observable<Employe> {
+        let query = {
+          query: ${type.queries.getById}
+        };
+
+        return this.http
+          .post(environment.endpoint_uri, query)
+          .pipe(map((result) => this.mapEmploye(result)));
+      }
+
+
+      override delete(id: string | number): Observable<string | number> {
+        let query = {
+          query: ${type.queries.delete}
+        };
+        return this.http
+          .post(environment.endpoint_uri, query)
+          .pipe(map((result) => this.mapEmploye(result)));
+      }
+      override add(entity: Employe): Observable<Employe> {
+        let query = {
+            query: ${type.queries.create}
+        };
+            
+        return this.http
+        .post(environment.endpoint_uri, query)
+        .pipe(map((result) => this.mapAdd(result)));
+      }
+      override update(update: Update<Employe>): Observable<Employe> {
+        let query = {
+          query: ${type.queries.update}
+        };
+        return this.http
+          .post(environment.endpoint_uri, query)
+          .pipe(map((result) => this.mapEmploye(result)));
+      }
+
+     
+       map${type.typeName}s(result: any) {
+         return result.data.${strings.camelize(type.typeName)}s;
+       }
+     
+       map${type.typeName}(result: any) {
+         return result.data.${strings.camelize(type.typeName)};
+       }
+     
+       mapUpdate(result: any) {
+         return result.data.${strings.camelize(type.typeName)};
+       }
+       mapAdd(result: any) {
+         return result.data;
+       }
+     }`;
+    /** Create data-service in current passed tree **/
+    _tree.create(
+      `${projectName}/src/app/store/data-service/${strings.camelize(
+        type.typeName
+      )}-data.service.ts`,
+      dataServiceTemplate
+    );
+  }
+}
 
 /**
- * Setup field value for relation field 
- * @param relationType 
- * @param fieldType 
- * @return fieldValue  
+ * Setup field value for relation field
+ * @param relationType
+ * @param fieldType
+ * @return fieldValue
  * TODO : setup typing for relationType
  */
-function setupRelationValueInTsModel(fieldType:string, relationType:any) {
-  console.log(relationType, fieldType);
-  let fieldValue = `"${fieldType}"`
+function setupRelationValueInTsModel(fieldType: string, relationType: any) {
+  let fieldValue = `"${fieldType}"`;
   switch (relationType) {
     case 'manyToOne':
       fieldValue = fieldValue.replace(/"([^"]*)"/g, '[$1]');
@@ -348,7 +462,7 @@ function setupRelationValueInTsModel(fieldType:string, relationType:any) {
     default:
       break;
   }
-  return fieldValue
+  return fieldValue;
 }
 
 /**

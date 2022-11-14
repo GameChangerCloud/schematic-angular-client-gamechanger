@@ -12,43 +12,47 @@ import { QuestionService } from '../../service/question.service';
 @Component({
   selector: 'gamechanger-dynamic-form',
   templateUrl: './gamechanger-dynamic-form.component.html',
-  styleUrls: ['./gamechanger-dynamic-form.component.scss']
+  styleUrls: ['./gamechanger-dynamic-form.component.scss'],
 })
 export class GamechangerDynamicFormComponent implements OnInit {
-
-  
-  @Input() type!: 'update' | 'add';
-  @Input() entity!:any;
+  @Input() type!: 'update' | 'add';
+  @Input() entity!: any;
   questions: QuestionBase<string>[] | null = [];
   form!: FormGroup;
   payLoad = '';
   questions$!: Observable<QuestionBase<any>[]>;
-  activeEntity:string | null ;
+  activeEntity: string | null;
 
-  constructor(private route: ActivatedRoute,private qcs: QuestionControlService, private qs: QuestionService, private schemaTypes: SchemaTypesService,private employeService: EmployeService,private workService: WorkService) {
+  constructor(
+    private route: ActivatedRoute,
+    private qcs: QuestionControlService,
+    private qs: QuestionService,
+    private schemaTypes: SchemaTypesService,
+    private employeService: EmployeService,
+    private workService: WorkService
+  ) {
     this.activeEntity = this.route.snapshot.paramMap.get('model');
   }
 
   ngOnInit() {
-    this.questions$ = this.qs.getQuestions(this.schemaTypes.getSchemaTypes(),this.type,this.entity);
-    let types = this.schemaTypes.getSchemaTypes()
-    this.questions$.subscribe(questions=>{
-      this.questions = questions
+    this.questions$ = this.qs.getQuestions(
+      this.schemaTypes.getSchemaTypes(),
+      this.type,
+      this.entity
+    );
+    let types = this.schemaTypes.getSchemaTypes();
+    this.questions$.subscribe((questions) => {
+      this.questions = questions;
       this.form = this.qcs.toFormGroup(questions as QuestionBase<string>[]);
-    })
+    });
   }
 
   onSubmit() {
     this.payLoad = JSON.stringify(this.form.getRawValue());
-    this.addEntitie(this.payLoad)
+    this.addEntitie(this.payLoad);
   }
 
-  addEntitie(entity:any): void {
-
-    
-
-    
-    eval(`this.employeService.add(${entity});`)  
+  addEntitie(entity: any): void {
+    eval(`this.employeService.add(${entity});`);
   }
-
 }

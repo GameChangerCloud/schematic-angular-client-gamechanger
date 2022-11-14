@@ -1,0 +1,20 @@
+.welcome-card {
+  margin: auto;
+  width: 34%;
+  margin-top: 15%;
+
+  &--title {
+    font-weight: bolder;
+    color: #4523fb;
+  }
+
+  &--wrapper {
+    padding-bottom: 2vh;
+  }
+} 
+
+.mat-card-title {
+  padding-bottom: 1.5vh;
+}
+
+

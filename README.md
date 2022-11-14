@@ -26,11 +26,66 @@ schematics --help
 `<your-app-name>/src/constants/index.js`  
 
 
-## Usage [In progress]
+## Generate your app
  
 To Generate your angular app simply do :
 
-`schematics angular_client_gamechanger  --gqlPath=<your-gcl-path-schema>`
+`schematics angular_client_gamechanger`
+
+You will be asked for :
+
+- Name
+- Description
+- File name of your graphQL schema (schema have to be in graphql-schemas directory)
+- endpoint_uri
+- Cognito user pool ID
+- Cognito client ID 
+
+## Generated app structure
+___
+When you launch your application, you will have a toolbar on the top with :
+
+* Home : Home page (display the graphQL schema and the API Gateway)
+
+* Tables : Page which manage tables (create tables, delete tables, create fake data, delete all data, check if tables have been created and update you database)
+
+* Models : You will have all models and you can access here to manage them.
+
+All this pages are only available if you are connected. You can access the connexion page at <your-app>/admin url 
+
+If your app was setuped with gamechanger-aws-generator your cred are :
+username : admin@admin.fr 
+password : password
+
+## Deployment
+Using S3 and CloudFront, you can deploy your app to make it available globally through an URL.
+
+Initialize the cloud structure
+````
+cd terraform 
+````
+````
+terraform init
+````
+````
+terraform apply 
+````
+It will create two environment `staging` & `production`.
+The CloudFront URLs corresponding will be printed in `<your-app-name>/terraform/ids`. If it doesn't, you can get them in your CloudFront console on aws website.  
+
+### Build
+
+````
+npm run build
+````
+### Deploy
+
+You need to have aws cli setup with your cred then 
+````
+aws s3 sync dist/<your-app-name> s3://<bucket-name>
+````
+
+See the results on URLs printed in `<your-app-name>/terraform/ids`
 
 ## Schematic Developement Notes 
 
