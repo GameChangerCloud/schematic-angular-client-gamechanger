@@ -1,4 +1,4 @@
 
 # Ignores TypeScript files, but keeps definitions.
-*.ts
+.ts
 !*.d.ts

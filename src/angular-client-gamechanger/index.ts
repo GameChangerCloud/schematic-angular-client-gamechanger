@@ -91,9 +91,9 @@ function initTypes(gcpFileName: string) {
   );
 
   // 1 - Basic Parsing of the schema
-  let types = schemaParser(schemaCode);
+
   // 2 - Enriched parsing with typesGenerator()
-  types = typesGenerator(types);
+  let types = typesGenerator(schemaParser(schemaCode));
   // 3 - Add relation & directivity info in the types
   types = getRelations(types);
   // 4 - enriche types with graphQL queries for each types
