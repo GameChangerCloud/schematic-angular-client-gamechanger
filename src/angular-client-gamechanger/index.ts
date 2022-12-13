@@ -27,7 +27,7 @@ const path = require('path');
  * @param _options Options from schematics schema
  * @returns <custom-gamechanger-angular-client>
  */
-export function angularClientGamechanger(_options: any): Rule {
+export function generate(_options: any): Rule {
   return (_tree: Tree, _context: SchematicContext) => {
     /**
      * CHECK REQUIRED OPTIONS

@@ -8,10 +8,6 @@ Generator based on [Angular schematics cli](https://github.com/angular/angular-c
 ```
 npm install -g @angular-devkit/schematics-cli
 ```
-Check documentation with
-```bash
-schematics --help
-```
 - A valid graphQL schema
 - An AWS Account set up and configured on your machine ( best if you use the [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html) to configure with `aws configure` command to your [AWS Access Key] and [AWS Secret Access Key] )
 - A Cognito User group set up (see [AWS Cognito](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pool-as-user-directory.html)) :
@@ -28,15 +24,24 @@ schematics --help
 
 ## Generate your app
  
-To Generate your angular app simply do :
+To install generator, start of by installing the npm package in a repository which contains your graphql schema:
 
-`schematics angular_client_gamechanger`
+- @schematic-angular-client-gamechanger 
+```
+npm install schematic-angular-client-gamechanger
+```
 
+
+To run generator, add your graphql schema in the graphql-schemas folder and run the following inside the repo with the graphql schema:
+
+```bash
+schematics schematic-angular-client-gamechanger/:generate --dry-run=false
+```
 You will be asked for :
 
 - Name
 - Description
-- File name of your graphQL schema (schema have to be in graphql-schemas directory)
+- File name of your graphQL schema (ie: employees.graphql)
 - endpoint_uri
 - Cognito user pool ID
 - Cognito client ID 
@@ -92,10 +97,10 @@ See the results on URLs printed in `<your-app-name>/terraform/ids`
 ### Local developpement
 
 You can Execute schematic without publishing to npm simply do in root folder:
-`schematics .:<my-tested-schematic> --debug=false`
+`schematics ./:<my-tested-schematic> --debug=false`
 
 try to run this schematic test to check if you are ready :
-`schematics .:test --debug=false`
+`schematics ./:test --debug=false`
 
 ### Debug schematics
 

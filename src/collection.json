@@ -1,9 +1,9 @@
 {
   "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
-    "angular-client-gamechanger": {
+    "generate": {
       "description": "Main schematic of the generator",
-      "factory": "./angular-client-gamechanger/index#angularClientGamechanger",
+      "factory": "./angular-client-gamechanger/index#generate",
       "schema": "./angular-client-gamechanger/schema.json"
     },
     "test": {
