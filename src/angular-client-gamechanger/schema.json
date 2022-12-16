@@ -1,28 +1,28 @@
 {
   "$schema": "http://json-schema.org/schema",
   "$id": "0",
-  "title": "ng new options schema",
+  "title": "generate gamechanger angular client",
   "type": "object",
-  "description": "Generates a new basic application setup with ngrx store for your graphQL schema ",
+  "description": "Generates angular application setup with ngrx store based on your graphQL schema ",
   "properties": {
     "name": {
       "description": "Name of the new app.",
       "type": "string",
       "pattern": "^(?:@[a-zA-Z0-9-*~][a-zA-Z0-9-*._~]*/)?[a-zA-Z0-9-~][a-zA-Z0-9-._~]*$",
-      "default": "default-app",
-      "x-prompt": "What name would you like to use for the application?"
+      "default": "angular-client-gamechanger",
+      "x-prompt": "What name would you like to use for the application ?"
     },
     "description": {
       "type": "string",
       "description": "Description of the project",
       "x-prompt": "Describe your app"
     },
-    "gqlFileName": {
+    "graphqlFile": {
       "type": "string",
       "description": "Path of the graphQl schema",
       "minLength": 1,
-      "default":"employe-schema",
-      "x-prompt": "Please fill the name of your graphQL schema (put schema file in : /graphql-schemas/<your-schema-name>.graphql)"
+      "default": "employe-schema.graphql",
+      "x-prompt": "Please fill the name of your graphQL schema (ex : employe-schema.graphql)"
     },
     "endpoint_uri": {
       "type": "string",
@@ -46,5 +46,5 @@
       "default":"<cognitoClientId>"
     } 
   },
-  "required": ["name","gqlFileName"]
+  "required": ["name","graphqlFile"]
  }

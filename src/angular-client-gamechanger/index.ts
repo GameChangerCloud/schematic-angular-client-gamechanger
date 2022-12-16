@@ -37,7 +37,7 @@ export function generate(_options: any): Rule {
       throw new SchematicsException('Option (name) is required.');
     }
 
-    if(!_options.gqlFileName){
+    if(!_options.graphqlFile){
       throw new SchematicsException('GCL schema File name is required.');
     }
 
@@ -45,7 +45,7 @@ export function generate(_options: any): Rule {
     /**
      * INIT TYPES
      */
-    let types = initTypes(_options.gqlFileName);
+    let types = initTypes(_options.graphqlFile);
 
 
     /**
@@ -82,11 +82,10 @@ export function generate(_options: any): Rule {
  * TODO : Fix gql path
  * @returns types
  */
-function initTypes(gcpFileName: string) {
-  gcpFileName;
+function initTypes(graphqlSchema: string) {
 
   const schemaCode = fs.readFileSync(
-    path.join(__dirname, '../../graphql-schemas', `${gcpFileName}.graphql`),
+    path.join(__dirname, '../../', graphqlSchema),
     'utf8'
   );
 
@@ -147,7 +146,7 @@ function getGqlQuery(
 
   let queries = {
     GetAll: function () {
-      let typeNameplurals = strings.camelize(type.typeName) + 's';
+      let typeNamePlurals = strings.camelize(type.typeName) + 's';
       let queryFields = '';
       type.fields.forEach((field:any) => {
         field.type === 'String' || field.type === 'Number' || field.type === 'Boolean' || field.type ==='ID'
@@ -155,8 +154,8 @@ function getGqlQuery(
           : (queryFields += `${field.name}{id}`);
       });
       // i.e :  { employes {id,name,work{id},...}}
-      query = `\`{${typeNameplurals} {${queryFields}}}\``;
-      // Delete last comma
+      query = `\`{${typeNamePlurals} {${queryFields}}}\``;
+      // TODO : Delete last comma
 
     },
     GetById: function () {

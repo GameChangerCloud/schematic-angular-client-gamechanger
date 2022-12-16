@@ -32,7 +32,7 @@ npm install schematic-angular-client-gamechanger
 ```
 
 
-To run generator, add your graphql schema in the graphql-schemas folder and run the following inside the repo with the graphql schema:
+To run generator,run the following inside the repo with the graphql schema:
 
 ```bash
 schematics schematic-angular-client-gamechanger/:generate --dry-run=false
