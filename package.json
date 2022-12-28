@@ -1,6 +1,6 @@
 {
   "name": "schematic-angular-client-gamechanger",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "gamechanger angular client schematics",
   "scripts": {
     "build:watch": "tsc -p tsconfig.json --watch",

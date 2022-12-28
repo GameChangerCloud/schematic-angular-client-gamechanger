@@ -6,18 +6,18 @@ import { Injectable } from '@angular/core';
 
 export class GamechangerParserService {
 
-  schemaTypes
-  graphqlSchema
+  types
+  jsonGraphqlSchema
   constructor() { 
-    this.schemaTypes = '' ; // GENERATED : PARSER RESULT FROM GAPHQL SCHEMA 
-    this.graphqlSchema = ''; // GENERATED : PARSER RESULT FROM GAPHQL SCHEMA 
+    this.types = <%= jsonTypes %> ; // GENERATED : PARSER RESULT FROM GAPHQL SCHEMA 
+    this.jsonGraphqlSchema = `<%= jsonGraphqlSchema %>`; // GENERATED : PARSER RESULT FROM GAPHQL SCHEMA 
   }
 
   getSchemaTypes(){
-    return this.schemaTypes
+    return this.types
   }
 
   getGraphQlSchema(){
-    return this.graphqlSchema
+    return this.jsonGraphqlSchema
   }
 }

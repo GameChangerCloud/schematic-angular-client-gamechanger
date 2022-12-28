@@ -18,6 +18,8 @@ import {
   typesGenerator,
 } from 'easygraphql-parser-gamechanger';
 
+
+
 const fs = require('fs');
 const path = require('path');
 
@@ -41,13 +43,17 @@ export function generate(_options: any): Rule {
       throw new SchematicsException('GCL schema File name is required.');
     }
 
-
     /**
      * INIT TYPES
      */
     let types = initTypes(_options.graphqlFile);
 
-
+    _options.jsonTypes = JSON.stringify(types)
+    _options.jsonGraphqlSchema = fs.readFileSync(
+      path.join(__dirname, '../../', _options.graphqlFile),
+      'utf8'
+    )
+    
     /**
      * NGRX DATA files creation
      */
@@ -61,6 +67,7 @@ export function generate(_options: any): Rule {
     /**
      * Generate app from the template-app
      */
+
     const templateSource = apply(url('./files'), [
       template({
         ...strings,
@@ -96,8 +103,8 @@ function initTypes(graphqlSchema: string) {
   // 3 - Add relation & directivity info in the types
   types = getRelations(types);
   // 4 - enriche types with graphQL queries for each types
-  let queryPlaceholders = {placeholderId : 'id',placeholderFields : 'entity'};
-  types = getGqlQueries(types,queryPlaceholders);
+
+  types = getGqlQueries(types,{placeholderId : 'id',placeholderFields : 'entity'});
   
   return types;
 }
@@ -121,6 +128,7 @@ function getGqlQueries(types: any, queriesPlaceholders: any) {
     type.queries = queries;
   }
 
+  
   return types;
 }
 
@@ -135,58 +143,64 @@ function getGqlQueries(types: any, queriesPlaceholders: any) {
 function getGqlQuery(
   queryType: 'GetAll' | 'GetById' | 'Create' | 'Update' | 'Delete',
   type:any,
-  queriesPlaceholders?: {placeholderId:string,placeholdeFields:string}
-
+  queriesPlaceholders?: {placeHolderId:string,placeHoldeFields:string}
 ) {
   let query;
-  let placeholderId = queriesPlaceholders?.placeholderId
-  let placeholderFields = queriesPlaceholders?.placeholderId
+  let placeholderId = queriesPlaceholders?.placeHolderId
+  let placeholderFields = queriesPlaceholders?.placeHoldeFields
+  let typeNamePlurals = type.typeName + 's';
   placeholderId ? '': placeholderId = 'id'
   placeholderFields ? '': placeholderFields = 'entity'
-
+  
   let queries = {
     GetAll: function () {
-      let typeNamePlurals = strings.camelize(type.typeName) + 's';
       let queryFields = '';
       type.fields.forEach((field:any) => {
         field.type === 'String' || field.type === 'Number' || field.type === 'Boolean' || field.type ==='ID'
           ? (queryFields += field.name + ',')
           : (queryFields += `${field.name}{id}`);
       });
-      // i.e :  { employes {id,name,work{id},...}}
-      query = `\`{${typeNamePlurals} {${queryFields}}}\``;
-      // TODO : Delete last comma
+      query = `\`query getAll${typeNamePlurals} {${strings.camelize(typeNamePlurals)}Pagination(skip: 0, take: 100) {totalCount nodes {${queryFields}}}}\``
 
     },
     GetById: function () {
       let queryFields = '';
-      let placeholderId = queriesPlaceholders?.placeholderId
-      placeholderId ? '': placeholderId = 'id'
-
       type.fields.forEach((field:any) => {    
         field.type === 'String' || field.type === 'Number' || field.type === 'Boolean' || field.type ==='ID'
           ? queryFields += field.name + ','
           : queryFields += `${field.name}{id}`;
       });
-
-      query = `\`{${strings.camelize(type.typeName)}(id:\${${placeholderId}}) {${queryFields}}}\``;
-      
+      query = `\`query ${strings.camelize(type.typeName)}GetDataById {${strings.camelize(type.typeName)}GetDataById(${strings.camelize(type.typeName)}Id: "${placeholderId}",) {${strings.camelize(type.typeName)} {${queryFields}}}}\``
     },
     Create: function () {
-      query = `'TOFIX'`;
-      //"mutation {workCreate(id :  , job :  , salary :  , empl :  , Fk_workInfo_employe_id :  , ){ id,  job,  salary,   empl{id},  Fk_workInfo_employe_id, }}"
+      let fieldsToReturn = '';
+      let fieldsToCreate = ''
+      type.fields.forEach((field:any) => {    
+        if(field.type === 'String' || field.type === 'Number' || field.type === 'Boolean' || field.type ==='ID'){
+          fieldsToReturn += field.name + ','  
+          fieldsToCreate += `${field.name} : ${placeholderFields}.${field.name} `
+        } else {
+          fieldsToReturn += `${field.name}{id}`
+          fieldsToCreate += `${field.name} : ${placeholderFields}.${field.name} `
+        }
+      });
+      query = `\`mutation ${strings.camelize(type.typeName)}Create {${strings.camelize(type.typeName)}Create(input: {${fieldsToCreate}}) {${fieldsToReturn}}}}\``;
+
     },
     Update: function () {
-      let queryFields = '';
-      type.fields.forEach((field: any) => {
-
-        field.type === 'String' || 'Number' || 'Boolean' || 'ID'
-          ? (queryFields += `${field.name}: \${${placeholderId}}`)
-          : '';
+      let fieldsToReturn = '';
+      let fieldsToCreate = ''      
+      type.fields.forEach((field:any) => {    
+        if(field.type === 'String' || field.type === 'Number' || field.type === 'Boolean' || field.type ==='ID'){
+          fieldsToReturn += field.name + ','  
+          fieldsToCreate += `${field.name} : ${placeholderFields}.${field.name} `
+        } else {
+          fieldsToReturn += `${field.name}{id}`
+          fieldsToCreate += `${field.name} : ${placeholderFields}.${field.name} `
+        }
       });
-      query = `'TOFIX'`
-      // Test and convert
-      //"mutation {employeUpdate(id :  , email :  , firstName :  , lastName :  , login :  , password :  , workInfo :  , Fk_empl_employe_id :  , ){ id,  email,  firstName,  lastName,  login,  password,   workInfo{id},  Fk_empl_employe_id, }}"
+
+      query = `\`mutation ${strings.camelize(type.typeName)}Update {${strings.camelize(type.typeName)}Update(${strings.camelize(type.typeName)}Id: "${placeholderFields}.id",input: {${fieldsToCreate}}) {${fieldsToReturn}}}}\``;
 
     },
     Delete: function () {
@@ -199,7 +213,7 @@ function getGqlQuery(
       });
       query = `\`mutation {${strings.camelize(
         type.typeName
-      )}Delete (id:\${${placeholderId}}) {${queryFields}}}\``;
+      )}Delete (${strings.camelize(type.typeName)}Id:\${${placeholderId}}) {${queryFields}}}\``;
     },
   };
   queries[queryType]();
@@ -338,7 +352,7 @@ function createCustomDataServicesFiles(
 ) {
   for (let i = 0; i < types.length; i++) {
     const type = types[i];
-
+    
     let dataServiceTemplate = `import { Injectable } from '@angular/core';
      import { HttpClient } from '@angular/common/http';
      import {
@@ -379,14 +393,14 @@ function createCustomDataServicesFiles(
            .pipe(map((result) => this.map${type.typeName}s(result)));
        }
 
-       override getById(id: string | number): Observable<Employe> {
+       override getById(id: string | number): Observable<${type.typeName}> {
         let query = {
           query: ${type.queries.getById}
         };
 
         return this.http
           .post(environment.endpoint_uri, query)
-          .pipe(map((result) => this.mapEmploye(result)));
+          .pipe(map((result) => this.map${type.typeName}(result)));
       }
 
 
@@ -396,9 +410,9 @@ function createCustomDataServicesFiles(
         };
         return this.http
           .post(environment.endpoint_uri, query)
-          .pipe(map((result) => this.mapEmploye(result)));
+          .pipe(map((result) => this.map${type.typeName}(result)));
       }
-      override add(entity: Employe): Observable<Employe> {
+      override add(entity: ${type.typeName}): Observable<${type.typeName}> {
         let query = {
             query: ${type.queries.create}
         };
@@ -407,18 +421,18 @@ function createCustomDataServicesFiles(
         .post(environment.endpoint_uri, query)
         .pipe(map((result) => this.mapAdd(result)));
       }
-      override update(update: Update<Employe>): Observable<Employe> {
+      override update(entity: Update<${type.typeName}>): Observable<${type.typeName}> {
         let query = {
           query: ${type.queries.update}
         };
         return this.http
           .post(environment.endpoint_uri, query)
-          .pipe(map((result) => this.mapEmploye(result)));
+          .pipe(map((result) => this.map${type.typeName}(result)));
       }
 
      
        map${type.typeName}s(result: any) {
-         return result.data.${strings.camelize(type.typeName)}s;
+         return result.data.${strings.camelize(type.typeName)}sPagination.nodes;
        }
      
        map${type.typeName}(result: any) {

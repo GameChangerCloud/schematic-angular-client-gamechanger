@@ -4,9 +4,10 @@
 
 export const environment = {
   production: false,
+  api_auth_mechanism: '<%= apiAuthMecanism %>',
   cognitoUserPoolId: '<%= cognitoUserPoolId %>',
   cognitoClientId: '<%= cognitoClientId %>',
-  endpoint_uri: '<%= endpoint_uri %>'
+  endpoint_uri: '<%= endpointUri %>',
 };
 
 /*

@@ -59,7 +59,7 @@ export class GamechangerDynamicFormComponent implements OnInit {
 
   addEntitie(entity:any): void {
     // GENERATED TODO : BIND <ENTITY-NAME> TO USE RIGHT ENTITY SERVICE
-    eval(`this.employeService.add(${entity});`)  
+    eval(`this.${this.activeEntity}Service.add(${entity});`)  
   }
 
 }

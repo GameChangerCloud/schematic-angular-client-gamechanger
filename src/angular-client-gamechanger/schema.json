@@ -24,12 +24,22 @@
       "default": "employe-schema.graphql",
       "x-prompt": "Please fill the name of your graphQL schema (ex : employe-schema.graphql)"
     },
-    "endpoint_uri": {
+    "endpointUri": {
       "type": "string",
-      "description": "API to consume",
+      "description": "GraphQL endpoint to consume",
       "minLength": 1,
-      "x-prompt": "Please fill endpoint Uri to consume",
+      "x-prompt": "Please fill your graphql API endpoint",
       "default":"<endpoint_uri>"
+    },
+    "apiAuthMecanism": {
+      "type": "string",
+      "description": "mecanism used to consume api",
+      "x-prompt": "",
+      "enum": [
+        "none",
+        "cognito"
+      ],
+      "default":"none"
     },
     "cognitoUserPoolId": {
       "type": "string",
