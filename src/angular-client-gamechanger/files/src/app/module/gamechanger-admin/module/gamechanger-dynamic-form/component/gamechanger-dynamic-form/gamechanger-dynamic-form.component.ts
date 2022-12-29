@@ -26,7 +26,6 @@ export class GamechangerDynamicFormComponent implements OnInit {
   form!: FormGroup;
   payLoad = '';
   questions$!: Observable<QuestionBase<any>[]>;
-  activeEntity:string | null ;
 
   constructor(
     private route: ActivatedRoute,
