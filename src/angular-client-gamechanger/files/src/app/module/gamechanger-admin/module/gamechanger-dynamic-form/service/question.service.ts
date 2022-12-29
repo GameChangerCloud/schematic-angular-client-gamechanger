@@ -11,9 +11,10 @@ export class QuestionService {
   getQuestions(fields: any, type: 'update' | 'add',entity:any) {
 
     const questions: QuestionBase<string>[] = [];
-
-    for (let i = 0; i < fields.Employe.fields.length; i++) {
-      const field = fields.Employe.fields[i];
+    console.log(fields);
+    
+    for (let i = 0; i < fields.length; i++) {
+      const field = fields[i];
       questions.push(this.generateQuestionInput(field, field.type, type,entity));
     }
 

@@ -25,32 +25,31 @@ export class GamechangerDynamicFormComponent implements OnInit {
 
   @Input() type!: 'update' | 'add';
   @Input() entity!:any;
+  @Input() activeEntity!:any;
   questions: QuestionBase<string>[] | null = [];
   form!: FormGroup;
   payLoad = '';
   questions$!: Observable<QuestionBase<any>[]>;
-  activeEntity:string | null ;
 
   constructor(
     private route: ActivatedRoute,
     private qcs: QuestionControlService, 
     private qs: QuestionService, 
     private schemaTypes: GamechangerParserService,
-     
     private movieService : MovieService,
-     
     private actorService : ActorService,
-     
     private studioService : StudioService,
-     
     // GENERATED : private <entity_name>Service: <entity_name>Service,
-  ){
-    this.activeEntity = this.route.snapshot.paramMap.get('model');
-  }
+  ){}
 
   ngOnInit() {
-    this.questions$ = this.qs.getQuestions(this.schemaTypes.getSchemaTypes(),this.type,this.entity);
     let types = this.schemaTypes.getSchemaTypes()
+
+console.log(this.activeEntity);
+
+    let activeType = types.filter(type=>type.typeName === `${this.activeEntity?.charAt(0).toUpperCase() + this.activeEntity?.slice(1)}`)
+    this.questions$ = this.qs.getQuestions(activeType[0].fields,this.type,this.entity);
+
     this.questions$.subscribe(questions=>{
       this.questions = questions
       this.form = this.qcs.toFormGroup(questions as QuestionBase<string>[]);

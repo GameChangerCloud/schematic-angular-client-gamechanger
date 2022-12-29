@@ -7,7 +7,7 @@ export const environment = {
   api_auth_mechanism: 'none',
   cognitoUserPoolId: '<cognitoUserPoolId>',
   cognitoClientId: '<cognitoClientId>',
-  endpoint_uri: '<endpoint_uri>',
+  endpoint_uri: 'http://localhost:4242/graphql',
 };
 
 /*

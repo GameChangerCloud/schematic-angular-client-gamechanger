@@ -21,6 +21,7 @@ export class GamechangerDynamicFormComponent implements OnInit {
 
   @Input() type!: 'update' | 'add';
   @Input() entity!:any;
+  @Input() activeEntity:any ;
   questions: QuestionBase<string>[] | null = [];
   form!: FormGroup;
   payLoad = '';
