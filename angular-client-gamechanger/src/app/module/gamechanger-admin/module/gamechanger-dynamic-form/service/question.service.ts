@@ -22,7 +22,17 @@ export class QuestionService {
 
   generateQuestionInput(
     field: any,
-    inputType: 'String' | 'Number' | 'ID' | 'Work' |'Employe',
+    inputType: 
+     
+      "Movie"|
+     
+      "Actor"|
+     
+      "Studio"|
+     
+    'String' | 
+    'Number' | 
+    'ID', 
     type: 'update' | 'add',
     entity:any
   ): QuestionBase<string> {
@@ -57,7 +67,8 @@ export class QuestionService {
           disabled: true
         });
         break;
-        case 'Work':  
+         
+          case 'Movie':  
           input = new TextboxQuestion({
             key: field.name,
             label: field.name,
@@ -65,7 +76,8 @@ export class QuestionService {
             order: 1,
           });
           break;
-          case 'Employe':  
+         
+          case 'Actor':  
           input = new TextboxQuestion({
             key: field.name,
             label: field.name,
@@ -73,6 +85,16 @@ export class QuestionService {
             order: 1,
           });
           break;
+         
+          case 'Studio':  
+          input = new TextboxQuestion({
+            key: field.name,
+            label: field.name,
+            required: field.noNull,
+            order: 1,
+          });
+          break;
+         
 
       default:
         input = new TextboxQuestion({

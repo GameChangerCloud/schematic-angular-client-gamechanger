@@ -22,7 +22,13 @@ export class QuestionService {
 
   generateQuestionInput(
     field: any,
-    inputType: 'String' | 'Number' | 'ID' | 'Work' |'Employe',
+    inputType: 
+    <% for (let i = 0; i < types.length; i++) { %> 
+      "<%=types[i].typeName%>"|
+    <% } %> 
+    'String' | 
+    'Number' | 
+    'ID', 
     type: 'update' | 'add',
     entity:any
   ): QuestionBase<string> {
@@ -57,7 +63,8 @@ export class QuestionService {
           disabled: true
         });
         break;
-        case 'Work':  
+        <% for (let i = 0; i < types.length; i++) { %> 
+          case '<%=types[i].typeName%>':  
           input = new TextboxQuestion({
             key: field.name,
             label: field.name,
@@ -65,14 +72,7 @@ export class QuestionService {
             order: 1,
           });
           break;
-          case 'Employe':  
-          input = new TextboxQuestion({
-            key: field.name,
-            label: field.name,
-            required: field.noNull,
-            order: 1,
-          });
-          break;
+        <% } %> 
 
       default:
         input = new TextboxQuestion({

@@ -155,10 +155,15 @@ function getGqlQuery(
   let queries = {
     GetAll: function () {
       let queryFields = '';
+      
       type.fields.forEach((field:any) => {
-        field.type === 'String' || field.type === 'Number' || field.type === 'Boolean' || field.type ==='ID'
-          ? (queryFields += field.name + ',')
-          : (queryFields += `${field.name}{id}`);
+        if(!field.relation){
+          queryFields += field.name + ','
+        } else {
+          field.isArray 
+          ? queryFields += `${field.name}(skip:0, take: 100){totalCount nodes {id}}`
+          : (queryFields +=`${field.name}{id}`)
+        }
       });
       query = `\`query getAll${typeNamePlurals} {${strings.camelize(typeNamePlurals)}Pagination(skip: 0, take: 100) {totalCount nodes {${queryFields}}}}\``
 
@@ -213,7 +218,7 @@ function getGqlQuery(
       });
       query = `\`mutation {${strings.camelize(
         type.typeName
-      )}Delete (${strings.camelize(type.typeName)}Id:\${${placeholderId}}) {${queryFields}}}\``;
+      )}Delete (${strings.camelize(type.typeName)}Id:\${${placeholderId}}) {${strings.camelize(type.typeName)}Id}}\``;
     },
   };
   queries[queryType]();
@@ -281,11 +286,13 @@ function createEntitiesTsModelsFiles(
       if (
         field.type !== 'String' &&
         field.type !== 'ID' &&
-        field.type !== 'Number'
+        field.type !== 'Number' &&
+        field.type !== 'Float' &&
+        field.type !== 'Int' 
       ) {
         let importTemplate = `import { ${strings.capitalize(
           field.type
-        )} } from '../models/${strings.camelize(field.type)}'`;
+        )} } from './${strings.camelize(field.type)}'\n`;
         importsTemplate += importTemplate;
       }
     }
@@ -303,27 +310,21 @@ function createEntitiesTsModelsFiles(
     let fields = '';
     for (let i = 0; i < type.fields.length; i++) {
       const field = type.fields[i];
+      let requiredField = field.noNull ? '!':'?'
       if (
-        field.type === 'String' ||
-        field.type === 'ID' ||
-        field.type === 'Number'
+        !field.relation
       ) {
         let fieldType = field.type;
-        if (field.type === 'ID') {
+        if (field.type === 'ID' || field.type === 'Float' ||  field.type === 'Int' || field.type === 'Number' ) {
           fieldType = 'number';
         }
-        let fieldToTsType = `  public ${
+        fields += `  public ${
           field.name
-        }${setupRequiredFieldInTsModel(field.noNull)}: ${fieldType};\n`;
-        fields += fieldToTsType;
+        }${requiredField}: ${fieldType};\n`;
       } else {
-        // let fieldType = field.type;
-        let fieldToTsType = `  public ${
+        fields += `  public ${
           field.name
-        }${setupRequiredFieldInTsModel(
-          field.noNull
-        )}: ${setupRelationValueInTsModel(field.type, field.relationType)};\n`;
-        fields += fieldToTsType;
+        }${requiredField}: ${toArrayField(field.type, field.isArray)};\n`;
       }
     }
 
@@ -457,32 +458,24 @@ function createCustomDataServicesFiles(
 }
 
 /**
- * Setup field value for relation field
+ * Check if field is Array | Set array in the string
  * @param relationType
  * @param fieldType
  * @return fieldValue
- * TODO : setup typing for relationType
  */
-function setupRelationValueInTsModel(fieldType: string, relationType: any) {
-  let fieldValue = `"${fieldType}"`;
-  switch (relationType) {
-    case 'manyToOne':
-      fieldValue = fieldValue.replace(/"([^"]*)"/g, '[$1]');
-      break;
-    case 'oneToMany':
-      fieldValue = fieldValue.replace(/"([^"]*)"/g, '$1');
-      break;
-    default:
-      break;
-  }
+function toArrayField(fieldName: string, isArray: boolean) {
+  let fieldValue = `"${fieldName}"`;
+  isArray ? fieldValue = fieldValue.replace(/"([^"]*)"/g, '[$1]'): fieldValue = fieldValue.replace(/"([^"]*)"/g, '$1');
+  // switch (relationType) {
+  //   case 'manyToOne':
+  //     fieldValue = fieldValue.replace(/"([^"]*)"/g, '[$1]');
+  //     break;
+  //   case 'oneToMany':
+  //     fieldValue = fieldValue.replace(/"([^"]*)"/g, '$1');
+  //     break;
+  //   default:
+  //     break;
+  // }
   return fieldValue;
 }
 
-/**
- * Return right TS semantic for required/not field
- * @param required true | false
- * @returns true : ! | false : ?
- */
-function setupRequiredFieldInTsModel(required: boolean) {
-  return required ? '!' : '?';
-}

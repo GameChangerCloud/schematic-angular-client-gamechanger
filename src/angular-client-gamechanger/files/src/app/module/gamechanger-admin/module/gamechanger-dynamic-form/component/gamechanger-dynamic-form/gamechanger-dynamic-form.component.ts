@@ -4,20 +4,21 @@ import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { GamechangerParserService } from 'src/app/module/gamechanger-admin/services/gamechanger-parser.service';
-import { EmployeService } from 'src/app/store/service/employe.service';
-import { WorkService } from 'src/app/store/service/work.service';
 import { QuestionBase } from '../../models/questions/question-base';
 import { QuestionControlService } from '../../service/question-control.service';
 import { QuestionService } from '../../service/question.service';
+<% for (let i = 0; i < types.length; i++) { %> 
+import {<%=types[i].typeName%>Service} from 'src/app/store/service/<%=camelize(types[i].typeName)%>.service';
+<% } %> 
 
 @Component({
   selector: 'gamechanger-dynamic-form',
   templateUrl: './gamechanger-dynamic-form.component.html',
   styleUrls: ['./gamechanger-dynamic-form.component.scss']
 })
+
 export class GamechangerDynamicFormComponent implements OnInit {
 
-  
   @Input() type!: 'update' | 'add';
   @Input() entity!:any;
   questions: QuestionBase<string>[] | null = [];
@@ -31,14 +32,10 @@ export class GamechangerDynamicFormComponent implements OnInit {
     private qcs: QuestionControlService, 
     private qs: QuestionService, 
     private schemaTypes: GamechangerParserService,
-
     <% for (let i = 0; i < types.length; i++) { %> 
     private <%=decamelize(types[i].typeName)%>Service : <%=types[i].typeName%>Service,
     <% } %> 
-    // private employeService: EmployeService,
-    // private workService: WorkService
     // GENERATED : private <entity_name>Service: <entity_name>Service,
-
   ){
     this.activeEntity = this.route.snapshot.paramMap.get('model');
   }

@@ -1,0 +1,20 @@
+type Movie {
+  id: ID
+  title: String 
+  rating: Float 
+  actors: [Actor]
+  studio: Studio!
+}
+
+type Actor {
+  id: ID
+  name: String
+  movies: [Movie]
+}
+
+
+type Studio {
+  name: String!
+  turnover: Int 
+}
+

@@ -1,5 +1,6 @@
 import { Component, EnvironmentInjector, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { GamechangerParserService } from '../../services/gamechanger-parser.service';
 
 
 
@@ -12,30 +13,14 @@ export class GamechangerAdminHomeLayoutComponent implements OnInit {
 
   endpoint = environment.endpoint_uri
   apiAuthMechanism = environment.api_auth_mechanism
-  // Fix schematics schema generator 
-  gclSchema = `
-  type Employe {
-    id: ID!
-    email: String!
-    firstName: String
-    lastName: String
-    login: String!
-    password: String!
-    workInfo : Work
-  }
-  
-  type Work {
-    id: ID!
-    job: String
-    salary: String
-    empl: [Employe]
-  };`
+  gclSchema = ''
 
-  constructor() {
+  constructor(gamechangerParserService:GamechangerParserService) {
+    this.gclSchema = gamechangerParserService.getJsonGraphQlSchema()
   }
 
   ngOnInit(): void {
- 
+   
   }
 
 

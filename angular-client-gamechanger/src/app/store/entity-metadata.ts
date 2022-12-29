@@ -3,18 +3,22 @@ import {EntityDataModule,EntityMetadataMap, DefaultDataServiceConfig} from  '@ng
 
 const entityMetadata: EntityMetadataMap = { 
    
-    Employe : {},
+    Movie : {},
    
-    Work : {},
+    Actor : {},
+   
+    Studio : {},
    
 } ;
 
 
 const pluralNames =  { 
    
-    Employe : 'Employes',
+    Movie : 'Movies',
    
-    Work : 'Works',
+    Actor : 'Actors',
+   
+    Studio : 'Studios',
    
 }
 

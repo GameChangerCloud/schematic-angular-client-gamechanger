@@ -12,11 +12,6 @@ export class GamechangerAdminNavbarComponent implements OnInit {
 
   activatedRoute = "";
 
-  // models = [
-  //   {name: 'work', viewValue: 'Work'},
-  //   {name: 'employe', viewValue: 'Employe'},
-  // ];
-
   constructor(private router: Router) { }
 
   ngOnInit(): void {

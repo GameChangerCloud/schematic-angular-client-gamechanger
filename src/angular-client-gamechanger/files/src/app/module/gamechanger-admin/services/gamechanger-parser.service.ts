@@ -17,7 +17,7 @@ export class GamechangerParserService {
     return this.types
   }
 
-  getGraphQlSchema(){
+  getJsonGraphQlSchema(){
     return this.jsonGraphqlSchema
   }
 }

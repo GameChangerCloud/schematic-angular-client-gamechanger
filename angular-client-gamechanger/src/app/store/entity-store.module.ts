@@ -3,9 +3,11 @@ import { EntityDataService } from '@ngrx/data'; // <-- import the NgRx Data data
 
 // GENERATED : import {<ENTITY_NAME>DataService} from './data-service/<entity_name>-data.service';
  
-  import {EmployeDataService} from './data-service/employe-data.service';
+  import {MovieDataService} from './data-service/movie-data.service';
  
-  import {WorkDataService} from './data-service/work-data.service';
+  import {ActorDataService} from './data-service/actor-data.service';
+ 
+  import {StudioDataService} from './data-service/studio-data.service';
  
 
 @NgModule({
@@ -13,9 +15,11 @@ import { EntityDataService } from '@ngrx/data'; // <-- import the NgRx Data data
   providers: [ 
     // GENERATED : <ENTITY_NAME>DataService,
      
-      EmployeDataService,
+      MovieDataService,
      
-      WorkDataService,
+      ActorDataService,
+     
+      StudioDataService,
      
     
   ] // <-- provide custom data service
@@ -26,17 +30,21 @@ export class EntityStoreModule {
     entityDataService: EntityDataService,
     // GENERATED : <ENTITY_NAME>DataService: <ENTITY_NAME>DataService,
      
-      employeDataService: EmployeDataService,
+      movieDataService: MovieDataService,
      
-      workDataService: WorkDataService,
+      actorDataService: ActorDataService,
+     
+      studioDataService: StudioDataService,
      
     
   ) {
     // GENERATED : entityDataService.registerService('<ENTITY_NAME>', <ENTITY_NAME>DataService);,
      
-      entityDataService.registerService('Employe',employeDataService);
+      entityDataService.registerService('Movie',movieDataService);
      
-      entityDataService.registerService('Work',workDataService);
+      entityDataService.registerService('Actor',actorDataService);
+     
+      entityDataService.registerService('Studio',studioDataService);
      
     
     // <-- register new dataService there
