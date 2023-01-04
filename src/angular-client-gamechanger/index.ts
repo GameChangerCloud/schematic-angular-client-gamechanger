@@ -20,6 +20,7 @@ import {
 
 
 
+
 const fs = require('fs');
 const path = require('path');
 
@@ -102,10 +103,11 @@ function initTypes(graphqlSchema: string) {
   let types = typesGenerator(schemaParser(schemaCode));
   // 3 - Add relation & directivity info in the types
   types = getRelations(types);
-  // 4 - enriche types with graphQL queries for each types
-
+  // 4 - enriche types with entity ID field checker
+  types = checkEntitiesIdField(types);
+  // 5 - enriche types with graphQL queries for each types
   types = getGqlQueries(types,{placeholderId : 'id',placeholderFields : 'entity'});
-  
+
   return types;
 }
 
@@ -119,11 +121,11 @@ function getGqlQueries(types: any, queriesPlaceholders: any) {
     let type = types[i];
 
     let queries = {
-      getAll: getGqlQuery('GetAll', type),
-      getById: getGqlQuery('GetById',type,queriesPlaceholders),
-      create: getGqlQuery('Create', type,queriesPlaceholders),
-      update: getGqlQuery('Update',type,queriesPlaceholders),
-      delete: getGqlQuery('Delete',type,queriesPlaceholders),
+      getAll: generateGqlQuery('GetAll', type),
+      getById: generateGqlQuery('GetById',type,queriesPlaceholders),
+      create: generateGqlQuery('Create', type,queriesPlaceholders),
+      update: generateGqlQuery('Update',type,queriesPlaceholders),
+      delete: generateGqlQuery('Delete',type,queriesPlaceholders),
     };
     type.queries = queries;
   }
@@ -140,7 +142,7 @@ function getGqlQueries(types: any, queriesPlaceholders: any) {
  * @param typeFields
  * @returns GraphQL query | i.e : { employes {id,name,work{id},...}}
  */
-function getGqlQuery(
+function generateGqlQuery(
   queryType: 'GetAll' | 'GetById' | 'Create' | 'Update' | 'Delete',
   type:any,
   queriesPlaceholders?: {placeHolderId:string,placeHoldeFields:string}
@@ -154,8 +156,13 @@ function getGqlQuery(
   
   let queries = {
     GetAll: function () {
+
+      if(type.typeName==='Studio'){
+        console.log(type);
+        
+      }
       let queryFields = '';
-      
+      type.emptyIdField ? queryFields += 'id,': ''
       type.fields.forEach((field:any) => {
         if(!field.relation){
           queryFields += field.name + ','
@@ -181,16 +188,30 @@ function getGqlQuery(
       let fieldsToReturn = '';
       let fieldsToCreate = ''
       type.fields.forEach((field:any) => {    
-        if(field.type === 'String' || field.type === 'Number' || field.type === 'Boolean' || field.type ==='ID'){
+        if(
+          field.type === 'String' || 
+          field.type === 'Number' || 
+          field.type === 'Boolean' || 
+          field.type === 'ID' || 
+          field.type === 'Float'|| 
+          field.type === 'Int'
+          ){
+          let t = `\${${placeholderFields}.${field.name}}`
           fieldsToReturn += field.name + ','  
-          fieldsToCreate += `${field.name} : ${placeholderFields}.${field.name} `
+          fieldsToCreate += `${field.name} : ${toStringField(t,field.type)} `
         } else {
-          fieldsToReturn += `${field.name}{id}`
-          fieldsToCreate += `${field.name} : ${placeholderFields}.${field.name} `
+          if(field.isArray){
+            let str = field.name
+            fieldsToCreate += `${str.substring(0, str.length - 1)}Ids : "\${${placeholderFields}.${field.name}}" `
+            fieldsToReturn += `${field.name}(skip: 0, take: 100){totalCount nodes{id}} `
+          } else {
+            fieldsToCreate += `${field.name}Id : "\${${placeholderFields}.${field.name}}" `
+            fieldsToReturn += `${field.name}{id},`
+          }
         }
       });
-      query = `\`mutation ${strings.camelize(type.typeName)}Create {${strings.camelize(type.typeName)}Create(input: {${fieldsToCreate}}) {${fieldsToReturn}}}}\``;
-
+      query = `\`mutation ${strings.camelize(type.typeName)}Create {${strings.camelize(type.typeName)}Create(input: {${fieldsToCreate}}) {${strings.camelize(type.typeName)}{${fieldsToReturn}}}}\``;
+      
     },
     Update: function () {
       let fieldsToReturn = '';
@@ -200,7 +221,7 @@ function getGqlQuery(
           fieldsToReturn += field.name + ','  
           fieldsToCreate += `${field.name} : ${placeholderFields}.${field.name} `
         } else {
-          fieldsToReturn += `${field.name}{id}`
+          fieldsToReturn += `${field.name}{id} `
           fieldsToCreate += `${field.name} : ${placeholderFields}.${field.name} `
         }
       });
@@ -466,16 +487,43 @@ function createCustomDataServicesFiles(
 function toArrayField(fieldName: string, isArray: boolean) {
   let fieldValue = `"${fieldName}"`;
   isArray ? fieldValue = fieldValue.replace(/"([^"]*)"/g, '[$1]'): fieldValue = fieldValue.replace(/"([^"]*)"/g, '$1');
-  // switch (relationType) {
-  //   case 'manyToOne':
-  //     fieldValue = fieldValue.replace(/"([^"]*)"/g, '[$1]');
-  //     break;
-  //   case 'oneToMany':
-  //     fieldValue = fieldValue.replace(/"([^"]*)"/g, '$1');
-  //     break;
-  //   default:
-  //     break;
-  // }
   return fieldValue;
 }
 
+/**
+ * Check if field is Array | Set array in the string
+ * @param relationType
+ * @param fieldType
+ * @return fieldValue
+ */
+function toStringField(field: string,entityType:string){
+
+  let fieldValue = field;
+  if(entityType === 'String' || entityType === 'ID' ){
+    // fieldValue.replace(/"([^"]*)"/g, '[$1]')
+    // console.log(fieldValue.replace(/"([^"]*)"/g, '[$1]'));
+    fieldValue = '"' + field + '"'
+    // fieldValue = fieldValue.replace(/"([^"]*)"/g, '$1');
+  } else {}
+  return fieldValue;
+}
+
+
+/**
+ * Check if ID field is there for each type 
+ * @param types 
+ * @returns 
+ */
+function checkEntitiesIdField(types:any): any{
+
+  types.forEach((type:any) => {
+
+    let emptyIdField = false
+    type.fields.forEach((field:any) => {
+      field.type === 'ID' ? emptyIdField = false : emptyIdField = true
+    });
+    type.emptyIdField = emptyIdField
+  });
+  
+  return types
+}

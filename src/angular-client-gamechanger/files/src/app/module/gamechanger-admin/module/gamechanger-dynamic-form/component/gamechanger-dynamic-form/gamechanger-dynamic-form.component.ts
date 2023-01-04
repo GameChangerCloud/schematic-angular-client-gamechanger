@@ -41,8 +41,10 @@ export class GamechangerDynamicFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.questions$ = this.qs.getQuestions(this.schemaTypes.getSchemaTypes(),this.type,this.entity);
     let types = this.schemaTypes.getSchemaTypes()
+    let activeType:any = types.filter(type => type.typeName === `${this.activeEntity.charAt(0).toUpperCase() + this.activeEntity.slice(1)}`)
+    this.questions$ = this.qs.getQuestions(activeType[0].fields,this.type,this.entity);
+
     this.questions$.subscribe(questions=>{
       this.questions = questions
       this.form = this.qcs.toFormGroup(questions as QuestionBase<string>[]);

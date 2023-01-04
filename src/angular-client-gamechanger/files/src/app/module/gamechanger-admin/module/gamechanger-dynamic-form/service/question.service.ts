@@ -29,7 +29,10 @@ export class QuestionService {
     <% } %> 
     'String' | 
     'Number' | 
-    'ID', 
+    'ID'|
+    'Int'|
+    'Float', 
+
     type: 'update' | 'add',
     entity:any
   ): QuestionBase<string> {
@@ -44,6 +47,24 @@ export class QuestionService {
         });
         break;
       case 'Number':
+        input = new TextboxQuestion({
+          key: field.name,
+          label: field.name,
+          required: field.noNull,
+          order: 1,
+          type: 'number',
+        });
+        break;
+        case 'Int':
+          input = new TextboxQuestion({
+            key: field.name,
+            label: field.name,
+            required: field.noNull,
+            order: 1,
+            type: 'number',
+          });
+          break;
+          case 'Float':
         input = new TextboxQuestion({
           key: field.name,
           label: field.name,
@@ -77,8 +98,8 @@ export class QuestionService {
 
       default:
         input = new TextboxQuestion({
-          key: 'field.name',
-          label: 'field.name',
+          key: 'field not supported',
+          label: 'field not supported',
           required: true,
           order: 1,
         });

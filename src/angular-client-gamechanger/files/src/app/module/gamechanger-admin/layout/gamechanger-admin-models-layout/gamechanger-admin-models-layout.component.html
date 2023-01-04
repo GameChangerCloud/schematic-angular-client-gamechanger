@@ -8,15 +8,20 @@
     <ng-container *ngFor="let column of entityColumns;" matColumnDef="{{column}}">
       <th mat-header-cell *matHeaderCellDef>{{column}}</th>
       <td mat-cell *matCellDef="let entity; let i = index" >
-   
-        <div *ngIf="isArray(entity[column])"> 
-          <div *ngFor="let subtity of entity[column]; let i = index">
-            {{entity[column][i].id}}
+        <div *ngIf="!isEmpty(entity[column])">
+          <div *ngIf="isNodes(entity[column])"> 
+            <div *ngFor="let subtity of entity[column].nodes; let i = index">
+              {{subtity["id"]}},
+            </div>
           </div>
-          
+          <div *ngIf="!isNodes(entity[column])" > 
+              {{entity[column]}}
+          </div>
         </div>
-        <div *ngIf="!isArray(entity[column])" > 
-            {{entity[column]}}
+        <div *ngIf="isEmpty(entity[column])">
+          <span class="no-entry">
+            Empty field
+          </span>
         </div>
       </td>
     </ng-container>

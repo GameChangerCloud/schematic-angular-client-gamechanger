@@ -2,14 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/internal/Observable';
-<% for (let i = 0; i < types.length; i++) { %> 
-import {<%=types[i].typeName%>Service} from 'src/app/store/service/<%=camelize(types[i].typeName)%>.service';
-<% } %> 
 import { GamechangerAdminEntityDialogComponent } from '../../component/gamechanger-admin-entity-dialog/gamechanger-admin-entity-dialog.component'
 import { UpperCasePipe } from '@angular/common';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { GamechangerParserService } from '../../services/gamechanger-parser.service';
+<% for (let i = 0; i < types.length; i++) { %>import {<%=types[i].typeName%>Service} from 'src/app/store/service/<%=camelize(types[i].typeName)%>.service';<% } %> 
 
 @Component({
   selector: 'app-gamechanger-admin-models-layout',
@@ -32,9 +30,7 @@ export class GamechangerAdminModelsLayoutComponent implements OnInit {
     public gamechangerParserService: GamechangerParserService,
     private route: ActivatedRoute,
     public dialog: MatDialog,
-    <% for (let i = 0; i < types.length; i++) { %> 
-    private <%=decamelize(types[i].typeName)%>Service : <%=types[i].typeName%>Service,
-    <% } %> 
+    <% for (let i = 0; i < types.length; i++) { %>private <%=decamelize(types[i].typeName)%>Service : <%=types[i].typeName%>Service,<% } %> 
   ) { 
     this.activeEntity = this.route.snapshot.paramMap.get('model');
     this.activeEntities$ = eval(`this.${this.activeEntity}Service.entities$;`)
@@ -79,12 +75,14 @@ export class GamechangerAdminModelsLayoutComponent implements OnInit {
     eval(`this.${this.activeEntity}Service.update(entity);`)  
   }
 
-  getEntitiesColumn(activeEntity:any):string[]{
-    
+  /**
+   * Get entity and parse Columns
+   * @param entity entity to parse
+   */
+  getEntitiesColumn(entity:any):string[]{
     let entitiesColumn:any = []
-
     this.types.forEach(type => {
-      if(type.typeName === this.capitalizeFirstLetter(activeEntity)){
+      if(type.typeName === this.capitalizeFirstLetter(entity)){
         for (let i = 0; i < type.fields.length; i++) {
           const field = type.fields[i].name;
           entitiesColumn.push(field)
@@ -95,10 +93,10 @@ export class GamechangerAdminModelsLayoutComponent implements OnInit {
     return entitiesColumn
   }
 
-  capitalizeFirstLetter(string:string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-  
+  /**
+   * Opend Entity Dialog Component
+   * @param type launch DynamicFormModule add/update mode
+   */
   openDialog(type: 'add' |'update', entity?: {}): void {
 
     const dialogRef = this.dialog.open(GamechangerAdminEntityDialogComponent, {
@@ -115,7 +113,38 @@ export class GamechangerAdminModelsLayoutComponent implements OnInit {
     });
   }
 
-  isArray(obj : any ) {
-    return Array.isArray(obj)
+  /**
+   * Check if entity have nodes
+   * @param entity 
+   * @return true | false
+   */
+  isNodes(entity : any): boolean {
+    return entity.hasOwnProperty('nodes') ? true : false
   }
+
+  /**
+   * Supported Empty type :
+   * null, nodes array checking
+   * @param entity 
+   * @returns true | false 
+   */
+  isEmpty(entity: any): boolean{
+    let isEmpty:boolean;
+
+    if (entity === null) {
+      isEmpty = true
+    } else {
+      isEmpty = false
+      if(entity.hasOwnProperty('nodes') ){
+        entity.nodes.length === 0 ? isEmpty = true : isEmpty = false 
+      }
+    }
+  
+    return isEmpty
+  }
+
+  capitalizeFirstLetter(string:string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+  
 }
