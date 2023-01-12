@@ -6,6 +6,7 @@ import { DynamicFormQuestionComponent } from './component/dynamic-form-question/
 import { ReactiveFormsModule } from '@angular/forms';
 import { QuestionControlService } from './service/question-control.service';
 import { QuestionService } from './service/question.service';
+import { AngularMaterialModule } from 'src/app/module/angular-material.module';
 
 
 
@@ -17,7 +18,8 @@ import { QuestionService } from './service/question.service';
   ],
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AngularMaterialModule
   ],
   exports: [
     GamechangerDynamicFormComponent

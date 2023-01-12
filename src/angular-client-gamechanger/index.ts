@@ -388,6 +388,7 @@ function createCustomDataServicesFiles(
      import { map } from 'rxjs/operators';
      import { environment } from 'src/environments/environment';
      import { Update } from '@ngrx/entity';
+     import { GamechangerParserService } from 'src/app/module/gamechanger-admin/services/gamechanger-parser.service';
      import { ${type.typeName} } from '../models/${strings.camelize(
       type.typeName
     )}';
@@ -399,11 +400,14 @@ function createCustomDataServicesFiles(
        constructor(
          http: HttpClient,
          httpUrlGenerator: HttpUrlGenerator,
-         logger: Logger
+         logger: Logger,
+         gamechangerParserService: GamechangerParserService
        ) {
          super('${type.typeName}', http, httpUrlGenerator);
          logger.log('Created custom ${type.typeName} EntityDataService');
+         this.types = gamechangerParserService.getSchemaTypes()
        }
+       types;
      
        override getAll(): Observable<${type.typeName}[]> {
          let query = {
@@ -434,15 +438,38 @@ function createCustomDataServicesFiles(
           .post(environment.endpoint_uri, query)
           .pipe(map((result) => this.map${type.typeName}(result)));
       }
-      override add(entity: ${type.typeName}): Observable<${type.typeName}> {
+
+
+      override add(entity: any): Observable<${type.typeName}> {
+        let inputToCreate = ''
+        for (const key  in entity) {
+          if (Object.prototype.hasOwnProperty.call(entity, key)) {
+            for (let i = 0; i < this.types.length; i++) {
+              const type = this.types[i];
+              if(type.typeName === '${type.typeName}'&& entity[key]){
+                for (let i = 0; i < type.fields.length; i++) {
+                  const field = type.fields[i];
+                  if(field.name === key){
+                    inputToCreate += \`\${key}:\${this.toStringField(entity[key],field.type)}\`
+                  } 
+                }
+              }
+            }
+
+          }
+        }
+
         let query = {
-            query: ${type.queries.create}
+            query: \`mutation studioCreate {studioCreate(input: {inputToCreate}) {studio{name,turnover,}}}\`
         };
-            
+
+        query.query = query.query.replace('inputToCreate',inputToCreate)
+        
         return this.http
         .post(environment.endpoint_uri, query)
         .pipe(map((result) => this.mapAdd(result)));
       }
+
       override update(entity: Update<${type.typeName}>): Observable<${type.typeName}> {
         let query = {
           query: ${type.queries.update}
@@ -467,6 +494,18 @@ function createCustomDataServicesFiles(
        mapAdd(result: any) {
          return result.data;
        }
+
+      toStringField(field: string,entityType:string){
+
+        let fieldValue = field;
+        if(entityType === 'String' || entityType === 'ID' ){
+          // fieldValue.replace(/"([^"]*)"/g, '[$1]')
+          // console.log(fieldValue.replace(/"([^"]*)"/g, '[$1]'));
+          fieldValue = '"' + field + '"'
+          // fieldValue = fieldValue.replace(/"([^"]*)"/g, '$1');
+        } else {}
+        return fieldValue;
+      }
      }`;
     /** Create data-service in current passed tree **/
     _tree.create(
