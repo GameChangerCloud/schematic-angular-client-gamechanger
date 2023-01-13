@@ -156,11 +156,6 @@ function generateGqlQuery(
   
   let queries = {
     GetAll: function () {
-
-      if(type.typeName==='Studio'){
-        console.log(type);
-        
-      }
       let queryFields = '';
       type.emptyIdField ? queryFields += 'id,': ''
       type.fields.forEach((field:any) => {
@@ -186,7 +181,10 @@ function generateGqlQuery(
     },
     Create: function () {
       let fieldsToReturn = '';
-      let fieldsToCreate = ''
+      let fieldsToCreate = 'inputToCreate'
+      type.emptyIdField ? fieldsToReturn += 'id,': ''
+      console.log(type.typeName,  type.emptyIdField);
+      
       type.fields.forEach((field:any) => {    
         if(
           field.type === 'String' || 
@@ -196,16 +194,16 @@ function generateGqlQuery(
           field.type === 'Float'|| 
           field.type === 'Int'
           ){
-          let t = `\${${placeholderFields}.${field.name}}`
+          // let t = `\${${placeholderFields}.${field.name}}`
           fieldsToReturn += field.name + ','  
-          fieldsToCreate += `${field.name} : ${toStringField(t,field.type)} `
+          // fieldsToCreate += `${field.name} : ${toStringField(t,field.type)} `
         } else {
           if(field.isArray){
-            let str = field.name
-            fieldsToCreate += `${str.substring(0, str.length - 1)}Ids : "\${${placeholderFields}.${field.name}}" `
+            // let str = field.name
+            // fieldsToCreate += `${str.substring(0, str.length - 1)}Ids : "\${${placeholderFields}.${field.name}}" `
             fieldsToReturn += `${field.name}(skip: 0, take: 100){totalCount nodes{id}} `
           } else {
-            fieldsToCreate += `${field.name}Id : "\${${placeholderFields}.${field.name}}" `
+            // fieldsToCreate += `${field.name}Id : "\${${placeholderFields}.${field.name}}" `
             fieldsToReturn += `${field.name}{id},`
           }
         }
@@ -239,7 +237,7 @@ function generateGqlQuery(
       });
       query = `\`mutation {${strings.camelize(
         type.typeName
-      )}Delete (${strings.camelize(type.typeName)}Id:\${${placeholderId}}) {${strings.camelize(type.typeName)}Id}}\``;
+      )}Delete (${strings.camelize(type.typeName)}Id: "\${${placeholderId}}") {${strings.camelize(type.typeName)}Id}}\``;
     },
   };
   queries[queryType]();
@@ -450,7 +448,16 @@ function createCustomDataServicesFiles(
                 for (let i = 0; i < type.fields.length; i++) {
                   const field = type.fields[i];
                   if(field.name === key){
-                    inputToCreate += \`\${key}:\${this.toStringField(entity[key],field.type)}\`
+                    if(field.relation){
+                      let str = field.name
+                      if(field.isArray){
+                        inputToCreate += \`\${str.substring(0, str.length - 1)}Ids : \${entity[key]} \`
+                      } else {
+                        inputToCreate += \`\${field.name}Id : \${entity[key]} \`
+                      }
+                    } else {
+                      inputToCreate += \`\${key}:\${this.toStringField(entity[key],field.type)} \`
+                    }
                   } 
                 }
               }
@@ -460,7 +467,7 @@ function createCustomDataServicesFiles(
         }
 
         let query = {
-            query: \`mutation studioCreate {studioCreate(input: {inputToCreate}) {studio{name,turnover,}}}\`
+            query: ${type.queries.create}
         };
 
         query.query = query.query.replace('inputToCreate',inputToCreate)
@@ -481,7 +488,15 @@ function createCustomDataServicesFiles(
 
      
        map${type.typeName}s(result: any) {
-         return result.data.${strings.camelize(type.typeName)}sPagination.nodes;
+        let data;
+        if(environment.api_auth_mechanism === "none"){
+          data =  result.data.${strings.camelize(type.typeName)}sPagination.nodes;
+        } else if(environment.api_auth_mechanism === "cognito"){
+          data = result.body.data.${strings.camelize(type.typeName)}sPagination.nodes;
+        } else {
+          data = []
+        }
+         return data;
        }
      
        map${type.typeName}(result: any) {
@@ -492,7 +507,16 @@ function createCustomDataServicesFiles(
          return result.data.${strings.camelize(type.typeName)};
        }
        mapAdd(result: any) {
-         return result.data;
+        
+        let data;
+          if(environment.api_auth_mechanism === "none"){
+            data =  result.data.studioCreate.studio;
+          } else if(environment.api_auth_mechanism === "cognito"){          
+            data = result.body.data.studioCreate.studio;
+          } else {
+            data = []
+          }
+         return data;
        }
 
       toStringField(field: string,entityType:string){
@@ -535,17 +559,17 @@ function toArrayField(fieldName: string, isArray: boolean) {
  * @param fieldType
  * @return fieldValue
  */
-function toStringField(field: string,entityType:string){
+// function toStringField(field: string,entityType:string){
 
-  let fieldValue = field;
-  if(entityType === 'String' || entityType === 'ID' ){
-    // fieldValue.replace(/"([^"]*)"/g, '[$1]')
-    // console.log(fieldValue.replace(/"([^"]*)"/g, '[$1]'));
-    fieldValue = '"' + field + '"'
-    // fieldValue = fieldValue.replace(/"([^"]*)"/g, '$1');
-  } else {}
-  return fieldValue;
-}
+//   let fieldValue = field;
+//   if(entityType === 'String' || entityType === 'ID' ){
+//     // fieldValue.replace(/"([^"]*)"/g, '[$1]')
+//     // console.log(fieldValue.replace(/"([^"]*)"/g, '[$1]'));
+//     fieldValue = '"' + field + '"'
+//     // fieldValue = fieldValue.replace(/"([^"]*)"/g, '$1');
+//   } else {}
+//   return fieldValue;
+// }
 
 
 /**
@@ -557,10 +581,15 @@ function checkEntitiesIdField(types:any): any{
 
   types.forEach((type:any) => {
 
-    let emptyIdField = false
+    let emptyIdField = true
     type.fields.forEach((field:any) => {
-      field.type === 'ID' ? emptyIdField = false : emptyIdField = true
+      if(emptyIdField){
+        field.type === 'ID' ? emptyIdField = false : ''
+      }
     });
+
+ 
+    
     type.emptyIdField = emptyIdField
   });
   
