@@ -451,9 +451,9 @@ function createCustomDataServicesFiles(
                     if(field.relation){
                       let str = field.name
                       if(field.isArray){
-                        inputToCreate += \`\${str.substring(0, str.length - 1)}Ids : \${entity[key]} \`
+                        inputToCreate += \`\${str.substring(0, str.length - 1)}Ids : "\${entity[key]}" \`
                       } else {
-                        inputToCreate += \`\${field.name}Id : \${entity[key]} \`
+                        inputToCreate += \`\${field.name}Id : "\${entity[key]}" \`
                       }
                     } else {
                       inputToCreate += \`\${key}:\${this.toStringField(entity[key],field.type)} \`

@@ -1,0 +1,15 @@
+<div [formGroup]="form">
+  <label  class="question-label" [attr.for]="question.key">{{question.label}}</label>
+
+  <div [ngSwitch]="question.controlType">
+    
+    <mat-form-field  *ngSwitchCase="'textbox'" appearance="outline" [style.width.%]='100'>
+        <input matInput [id]='question.key'[formControlName]="question.key" type="question.type">
+        <mat-hint *ngIf='!form.controls[this.question.key].valid  && form.controls[this.question.key].touched '>{{question.key}} is required</mat-hint>
+    </mat-form-field>
+
+    <select [id]="question.key" *ngSwitchCase="'dropdown'" [formControlName]="question.key">
+      <option *ngFor="let opt of question.options" [value]="opt.key">{{opt.value}}</option>
+    </select>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+.demo-table {
+  width: 90%;
+  margin: 2vw 5vw 0vw auto;
+}
+
+.demo-button-container {
+  padding-bottom: 16px;
+}
+
+.demo-button + .demo-button {
+  margin-left: 8px;
+}
+
+.svg_tables {
+  width: 30px;
+}
+
+.mat-stroked-button {
+  border: 1px solid #4400ff;
+  line-height: 54px;
+  background: #ffffff;
+  color: #4400ff;
+  margin-left: 5vw;
+  margin-top: 2vw;
+}
+
+.img-responsive {
+  width: 25px;
+  height: 25px;
+}
+
+.mat-paginator{
+  margin: 2vw 5vw 0vw auto;
+}
+
+.no-entry {
+  color: grey
+}
